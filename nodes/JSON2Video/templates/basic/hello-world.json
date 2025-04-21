@@ -1,0 +1,29 @@
+{
+  "id": "qkv3i2kq",
+  "width": 640,
+  "height": 360,
+  "quality": "high",
+  "draft": false,
+  "scenes": [
+    {
+      "id": "qbwuxqe1",
+      "background-color": "#4392F1",
+      "elements": [
+        {
+          "id": "q02gmjri",
+          "type": "text",
+          "style": "008",
+          "text": "Hello world",
+          "settings": {
+            "color": "white",
+            "font-size": "10vw",
+            "font-family": "Bebas Neue"
+          },
+          "duration": 5,
+          "cache": false
+        }
+      ]
+    }
+  ],
+  "elements": []
+}

@@ -1,0 +1,110 @@
+{
+  "id": "qznjqtiw",
+  "comment": "Corporate video",
+  "resolution": "full-hd",
+  "quality": "high",
+  "draft": false,
+  "scenes": [
+    {
+      "id": "quffi20q",
+      "elements": [
+        {
+          "id": "qq9lxjqf",
+          "type": "video",
+          "src": "https://assets.json2video.com/assets/videos/industry-04.mp4",
+          "muted": true
+        },
+        {
+          "id": "qrjs48no",
+          "type": "text",
+          "style": "008",
+          "text": "CORPORATE VIDEO",
+          "settings": {
+            "font-size": "10vw",
+            "text-shadow": "3px 3px black"
+          }
+        }
+      ]
+    },
+    {
+      "id": "qg7e6kkj",
+      "elements": [
+        {
+          "id": "qto5x1jl",
+          "type": "video",
+          "src": "https://assets.json2video.com/assets/videos/industry-01.mp4",
+          "muted": true,
+          "duration": 6
+        },
+        {
+          "id": "quv7r6vk",
+          "type": "component",
+          "component": "basic/001",
+          "width": 920,
+          "x": 960,
+          "y": 160,
+          "settings": {
+            "headline": {
+              "text": "Lorem ipsum dolor sit amet",
+              "color": "white",
+              "font-size": "6vw"
+            },
+            "body": {
+              "text": [
+                "Quisque posuere nisl ultrices, sodales purus et, ornare sapien",
+                "Curabitur sit amet convallis nisi"
+              ],
+              "color": "white",
+              "font-size": "4vw"
+            },
+            "card": {
+              "background": "rgb(0,0,0, 0.3)",
+              "padding": "4vw"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "id": "q96u1g3c",
+      "elements": [
+        {
+          "id": "q4k7hdf5",
+          "type": "video",
+          "src": "https://assets.json2video.com/assets/videos/industry-02.mp4",
+          "muted": true
+        },
+        {
+          "id": "qents5b5",
+          "type": "component",
+          "component": "basic/001",
+          "width": 920,
+          "x": 40,
+          "y": 240,
+          "settings": {
+            "headline": {
+              "text": "Proin at justo dignissim magna dapibus bibendum",
+              "color": "white",
+              "font-size": "6vw"
+            },
+            "body": {
+              "text": [
+                "Curabitur pharetra venenatis felis, aliquet placerat felis scelerisque sed",
+                "Integer semper euismod turpis malesuada vehicula",
+                "Integer non lectus sed tellus egestas luctus",
+                "Aenean metus dui, lacinia ut sodales id, consectetur et nisl"
+              ],
+              "color": "white",
+              "font-size": "4vw"
+            },
+            "card": {
+              "background": "rgb(0,0,0, 0.3)",
+              "padding": "2vw"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "elements": []
+}

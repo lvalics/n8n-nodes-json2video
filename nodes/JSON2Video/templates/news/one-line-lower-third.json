@@ -1,0 +1,36 @@
+{
+  "id": "q7zarmkm",
+  "resolution": "full-hd",
+  "quality": "high",
+  "draft": false,
+  "scenes": [
+    {
+      "id": "qx7pu2dh",
+      "background-color": "black",
+      "elements": [
+        {
+          "id": "qassofmh",
+          "type": "video",
+          "src": "https://assets.json2video.com/assets/videos/mars-01.mp4",
+          "scale": {
+            "height": 1080
+          }
+        },
+        {
+          "id": "q2t7sagj",
+          "type": "component",
+          "component": "basic/052",
+          "settings": {
+            "section": {
+              "text": "SPACE"
+            },
+            "headline": {
+              "text": "25 photos that could change the way you see our universe"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "elements": []
+}

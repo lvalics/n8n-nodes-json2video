@@ -1,0 +1,38 @@
+{
+  "id": "qhzpdcd8",
+  "resolution": "full-hd",
+  "quality": "high",
+  "draft": false,
+  "scenes": [
+    {
+      "id": "qdemf5nw",
+      "elements": [
+        {
+          "id": "qnv9eba5",
+          "type": "video",
+          "src": "https://assets.json2video.com/assets/videos/new-york-01.mp4"
+        },
+        {
+          "id": "q36hgpz2",
+          "type": "component",
+          "component": "basic/050",
+          "settings": {
+            "card": {
+              "vertical-align": "bottom"
+            },
+            "headline": {
+              "text": "Broadway will allow theatergoers to go mask optional in July",
+              "font-size": "auto"
+            },
+            "lead": {
+              "text": "Proof of vaccination is no longer required for patrons of the city's indoor dining, fitness and entertainment venues.",
+              "font-size": "auto"
+            }
+          },
+          "start": 3
+        }
+      ]
+    }
+  ],
+  "elements": []
+}

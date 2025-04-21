@@ -65,11 +65,169 @@ export class JSON2Video implements INodeType {
 						value: 'json',
 						description: 'Define movie using raw JSON',
 					},
+					{
+						name: 'Template',
+						value: 'template',
+						description: 'Start with a pre-built template',
+					},
 				],
 				default: 'simple',
 				displayOptions: {
 					show: {
 						operation: ['createMovie'],
+					},
+				},
+			},
+			// Template Selection
+			{
+				displayName: 'Template Category',
+				name: 'templateCategory',
+				type: 'options',
+				options: [
+					{
+						name: 'Basic',
+						value: 'basic',
+					},
+					{
+						name: 'Marketing',
+						value: 'marketing',
+					},
+					{
+						name: 'News',
+						value: 'news',
+					},
+				],
+				default: 'basic',
+				description: 'Category of templates to choose from',
+				displayOptions: {
+					show: {
+						operation: ['createMovie'],
+						inputMethod: ['template'],
+					},
+				},
+			},
+			{
+				displayName: 'Basic Templates',
+				name: 'basicTemplate',
+				type: 'options',
+				options: [
+					{
+						name: 'Hello World - Simple Text Animation',
+						value: 'hello-world',
+					},
+					{
+						name: 'Image Slideshow - Transitions Between Images',
+						value: 'image-slideshow',
+					},
+					{
+						name: 'Video with Text Overlay - Basic Text Over Video',
+						value: 'video-with-text-overlay',
+					},
+					{
+						name: 'Video with Watermark - Add Logo or Watermark',
+						value: 'video-with-watermark',
+					},
+				],
+				default: 'hello-world',
+				description: 'Basic template to use as starting point',
+				displayOptions: {
+					show: {
+						operation: ['createMovie'],
+						inputMethod: ['template'],
+						templateCategory: ['basic'],
+					},
+				},
+			},
+			{
+				displayName: 'Marketing Templates',
+				name: 'marketingTemplate',
+				type: 'options',
+				options: [
+					{
+						name: 'Black Friday Promo - Sale Announcement',
+						value: 'black-friday-promo',
+					},
+					{
+						name: 'Corporate Video - Professional Presentation',
+						value: 'corporate-video',
+					},
+					{
+						name: 'Event Agenda - Schedule Presentation',
+						value: 'event-agenda',
+					},
+					{
+						name: 'Event Speakers - Speaker Profiles',
+						value: 'event-speakers',
+					},
+					{
+						name: 'Motivational - Inspirational Quote Card',
+						value: 'motivational',
+					},
+					{
+						name: 'Promo - Variables Template with Call to Action',
+						value: 'promo',
+					},
+					{
+						name: 'Quote - Quotation with Background',
+						value: 'quote',
+					},
+					{
+						name: 'Real Estate - Property Presentation (Landscape)',
+						value: 'real-estate',
+					},
+					{
+						name: 'Real Estate Story - Property Tour (Portrait)',
+						value: 'real-estate-2',
+					},
+					{
+						name: 'Slide Text Left - Animated Text Entrance',
+						value: 'slide-text-left',
+					},
+				],
+				default: 'corporate-video',
+				description: 'Marketing template to use as starting point',
+				displayOptions: {
+					show: {
+						operation: ['createMovie'],
+						inputMethod: ['template'],
+						templateCategory: ['marketing'],
+					},
+				},
+			},
+			{
+				displayName: 'News Templates',
+				name: 'newsTemplate',
+				type: 'options',
+				options: [
+					{
+						name: 'CNN Style Lower Third - News Caption',
+						value: 'cnn-lower-third',
+					},
+					{
+						name: 'One Line Lower Third - Simple News Caption',
+						value: 'one-line-lower-third',
+					},
+				],
+				default: 'cnn-lower-third',
+				description: 'News template to use as starting point',
+				displayOptions: {
+					show: {
+						operation: ['createMovie'],
+						inputMethod: ['template'],
+						templateCategory: ['news'],
+					},
+				},
+			},
+			{
+				displayName: 'Customize Template',
+				name: 'customizeTemplate',
+				type: 'boolean',
+				default: true,
+				description: 'Whether to customize the selected template with your own content',
+				displayOptions: {
+					show: {
+						operation: ['createMovie'],
+						inputMethod: ['template'],
 					},
 				},
 			},
@@ -567,6 +725,91 @@ export class JSON2Video implements INodeType {
 					},
 				],
 			},
+			// Template Customization Options
+			{
+				displayName: 'Template Text Customization',
+				name: 'templateTextCustomization',
+				type: 'collection',
+				placeholder: 'Customize Text',
+				default: {},
+				displayOptions: {
+					show: {
+						operation: ['createMovie'],
+						inputMethod: ['template'],
+						customizeTemplate: [true],
+					},
+				},
+				options: [
+					{
+						displayName: 'Main Title',
+						name: 'mainTitle',
+						type: 'string',
+						default: '',
+						description: 'Main title text to replace in the template',
+					},
+					{
+						displayName: 'Subtitle',
+						name: 'subtitle',
+						type: 'string',
+						default: '',
+						description: 'Subtitle text to replace in the template',
+					},
+					{
+						displayName: 'Body Text',
+						name: 'bodyText',
+						type: 'string',
+						typeOptions: {
+							rows: 4,
+						},
+						default: '',
+						description: 'Main body text to replace in the template',
+					},
+				],
+			},
+			{
+				displayName: 'Template Media Customization',
+				name: 'templateMediaCustomization',
+				type: 'collection',
+				placeholder: 'Customize Media',
+				default: {},
+				displayOptions: {
+					show: {
+						operation: ['createMovie'],
+						inputMethod: ['template'],
+						customizeTemplate: [true],
+					},
+				},
+				options: [
+					{
+						displayName: 'Main Image URL',
+						name: 'mainImageUrl',
+						type: 'string',
+						default: '',
+						description: 'URL of the main image to use in the template',
+					},
+					{
+						displayName: 'Background Video URL',
+						name: 'backgroundVideoUrl',
+						type: 'string',
+						default: '',
+						description: 'URL of the background video to use in the template',
+					},
+					{
+						displayName: 'Logo URL',
+						name: 'logoUrl',
+						type: 'string',
+						default: '',
+						description: 'URL of the logo to use in the template',
+					},
+					{
+						displayName: 'Background Color',
+						name: 'backgroundColor',
+						type: 'color',
+						default: '#000000',
+						description: 'Background color for solid color backgrounds',
+					},
+				],
+			},
 			// Properties for the Check Movie Status operation
 			{
 				displayName: 'Project ID',
@@ -638,7 +881,262 @@ export class JSON2Video implements INodeType {
 						movieData.comment = movieConfig.comment;
 					}
 
-					if (inputMethod === 'json') {
+					// Helper functions for template handling
+					const loadTemplateLocal = async (category: string, name: string): Promise<IDataObject> => {
+						// In a production environment, this would load from the filesystem
+						// For n8n nodes distributed as packages, we need to embed the templates
+					
+						// Path convention: category/template-name
+						const templatePath = `${category}/${name}`;
+					
+						// Basic registry of embedded templates
+						const templates: { [key: string]: object } = {
+							'basic/hello-world': require('./templates/basic/hello-world.json'),
+							'basic/image-slideshow': require('./templates/basic/image-slideshow.json'),
+							'basic/video-with-text-overlay': require('./templates/basic/video-with-text-overlay.json'),
+							'basic/video-with-watermark': require('./templates/basic/video-with-watermark.json'),
+							'marketing/black-friday-promo': require('./templates/marketing/black-friday-promo.json'),
+							'marketing/corporate-video': require('./templates/marketing/corporate-video.json'),
+							'news/cnn-lower-third': require('./templates/news/cnn-lower-third.json'),
+							'news/one-line-lower-third': require('./templates/news/one-line-lower-third.json'),
+							// Add more templates as they're created
+						};
+					
+						if (!templates[templatePath]) {
+							throw new Error(`Template not found: ${templatePath}`);
+						}
+					
+						return templates[templatePath] as IDataObject;
+					};
+				
+					const replaceTextInTemplateLocal = (movieData: IDataObject, textType: string, newText: string): void => {
+						// Process each scene
+						for (const scene of movieData.scenes as IDataObject[]) {
+							if (!scene.elements || !Array.isArray(scene.elements)) {
+								continue;
+							}
+						
+							// Look for text elements
+							for (const element of scene.elements as IDataObject[]) {
+								// Handle direct text elements
+								if (element.type === 'text') {
+									// Replace based on text type - using heuristics to identify text role
+									if (textType === 'title' && isLikelyTitleLocal(element)) {
+										element.text = newText;
+									} else if (textType === 'subtitle' && isLikelySubtitleLocal(element)) {
+										element.text = newText;
+									} else if (textType === 'body' && isLikelyBodyTextLocal(element)) {
+										element.text = newText;
+									}
+								}
+							
+								// Handle component elements that may contain text
+								if (element.type === 'component' && element.settings) {
+									const settings = element.settings as IDataObject;
+								
+									// Check headline settings
+									if (settings.headline) {
+										const headline = settings.headline as IDataObject;
+										if (textType === 'title' && headline.text) {
+											headline.text = newText;
+										}
+									}
+								
+									// Check body settings
+									if (settings.body) {
+										const body = settings.body as IDataObject;
+										if (textType === 'body' && body.text) {
+											if (Array.isArray(body.text)) {
+												body.text = [newText];
+											} else {
+												body.text = newText;
+											}
+										}
+									}
+								
+									// Check other potential text containers in components
+									if (settings.lead && textType === 'subtitle') {
+										const lead = settings.lead as IDataObject;
+										if (lead.text) {
+											lead.text = newText;
+										}
+									}
+								}
+							}
+						}
+					};
+				
+					const replaceMediaInTemplateLocal = (movieData: IDataObject, mediaType: string, newSrc: string): void => {
+						// Process each scene
+						for (const scene of movieData.scenes as IDataObject[]) {
+							if (!scene.elements || !Array.isArray(scene.elements)) {
+								continue;
+							}
+						
+							// Look for media elements
+							for (const element of scene.elements as IDataObject[]) {
+								// Handle image elements
+								if (mediaType === 'image' && element.type === 'image') {
+									element.src = newSrc;
+								}
+							
+								// Handle video elements
+								if (mediaType === 'video' && element.type === 'video') {
+									element.src = newSrc;
+								}
+							
+								// Handle logo which is often an image with specific properties
+								if (mediaType === 'logo' && element.type === 'image') {
+									// Check if this image is likely a logo (usually smaller and positioned in corners)
+									if (isLikelyLogoLocal(element)) {
+										element.src = newSrc;
+									}
+								}
+							}
+						}
+					};
+				
+					const replaceBackgroundColorInTemplateLocal = (movieData: IDataObject, newColor: string): void => {
+						// Process each scene
+						for (const scene of movieData.scenes as IDataObject[]) {
+							// Replace the background color
+							scene['background-color'] = newColor;
+						}
+					};
+				
+					const applyTemplateCustomizationsLocal = (
+						movieData: IDataObject,
+						textCustomization: IDataObject,
+						mediaCustomization: IDataObject,
+					): void => {
+						if (!movieData.scenes || !Array.isArray(movieData.scenes)) {
+							return;
+						}
+					
+						// Apply text customizations
+						if (textCustomization.mainTitle) {
+							replaceTextInTemplateLocal(movieData, 'title', textCustomization.mainTitle as string);
+						}
+					
+						if (textCustomization.subtitle) {
+							replaceTextInTemplateLocal(movieData, 'subtitle', textCustomization.subtitle as string);
+						}
+					
+						if (textCustomization.bodyText) {
+							replaceTextInTemplateLocal(movieData, 'body', textCustomization.bodyText as string);
+						}
+					
+						// Apply media customizations
+						if (mediaCustomization.mainImageUrl) {
+							replaceMediaInTemplateLocal(movieData, 'image', mediaCustomization.mainImageUrl as string);
+						}
+					
+						if (mediaCustomization.backgroundVideoUrl) {
+							replaceMediaInTemplateLocal(movieData, 'video', mediaCustomization.backgroundVideoUrl as string);
+						}
+					
+						if (mediaCustomization.logoUrl) {
+							replaceMediaInTemplateLocal(movieData, 'logo', mediaCustomization.logoUrl as string);
+						}
+					
+						// Apply background color if specified
+						if (mediaCustomization.backgroundColor) {
+							replaceBackgroundColorInTemplateLocal(movieData, mediaCustomization.backgroundColor as string);
+						}
+					};
+				
+					const isLikelyTitleLocal = (element: IDataObject): boolean => {
+						// Titles are usually large, at the top, with short text
+						const text = element.text as string;
+					
+						if (element.settings) {
+							const settings = element.settings as IDataObject;
+							const fontSize = settings['font-size'] as string;
+						
+							// If it has large font size or contains vw (viewport width) with a high number
+							if (fontSize && (parseInt(fontSize, 10) > 40 || (fontSize.includes('vw') && parseFloat(fontSize) > 6))) {
+								return true;
+							}
+						}
+					
+						// Title text is usually shorter
+						return Boolean(text && text.length < 60);
+					};
+				
+					const isLikelySubtitleLocal = (element: IDataObject): boolean => {
+						// Subtitles are usually medium sized, below titles
+						const text = element.text as string;
+					
+						if (element.y && typeof element.y === 'number' && element.y > 100) {
+							// It's positioned further down, could be a subtitle
+							return true;
+						}
+					
+						// Subtitle text is usually medium length
+						return Boolean(text && text.length > 30 && text.length < 120);
+					};
+				
+					const isLikelyBodyTextLocal = (element: IDataObject): boolean => {
+						// Body text is usually smaller, longer, and positioned in the middle or lower
+						const text = element.text as string;
+					
+						// Body text is usually longer
+						return Boolean(text && text.length > 60);
+					};
+				
+					const isLikelyLogoLocal = (element: IDataObject): boolean => {
+						// Logos are usually small images positioned in corners
+					
+						// Check size
+						if ((element.width && typeof element.width === 'number' && element.width < 200) || 
+							(element.height && typeof element.height === 'number' && element.height < 200)) {
+							return true;
+						}
+					
+						// Check position (often in corners)
+						if ((element.x === 0 || (element.x && typeof element.x === 'number' && element.x > 1500)) &&
+							(element.y === 0 || (element.y && typeof element.y === 'number' && element.y < 100))) {
+							return true;
+						}
+					
+						return false;
+					};
+				
+					if (inputMethod === 'template') {
+						// Use a predefined template
+						const templateCategory = this.getNodeParameter('templateCategory', i) as string;
+						let templateName = '';
+					
+						// Get the template based on category
+						if (templateCategory === 'basic') {
+							templateName = this.getNodeParameter('basicTemplate', i) as string;
+						} else if (templateCategory === 'marketing') {
+							templateName = this.getNodeParameter('marketingTemplate', i) as string;
+						} else if (templateCategory === 'news') {
+							templateName = this.getNodeParameter('newsTemplate', i) as string;
+						}
+					
+						// Load the template
+						const templateData = await loadTemplateLocal(templateCategory, templateName);
+					
+						// Merge template with movie config
+						movieData = {
+							...templateData,
+							...movieData,
+						};
+					
+						// Check if we need to customize the template
+						const customizeTemplate = this.getNodeParameter('customizeTemplate', i, false) as boolean;
+					
+						if (customizeTemplate) {
+							// Get template customization options
+							const textCustomization = this.getNodeParameter('templateTextCustomization', i, {}) as IDataObject;
+							const mediaCustomization = this.getNodeParameter('templateMediaCustomization', i, {}) as IDataObject;
+						
+							// Apply customizations to template
+							applyTemplateCustomizationsLocal(movieData, textCustomization, mediaCustomization);
+						}
+					} else if (inputMethod === 'json') {
 						// If using JSON input, parse the scene definition
 						const movieDefinition = this.getNodeParameter('movieDefinition', i) as string;
 						
@@ -843,4 +1341,7 @@ export class JSON2Video implements INodeType {
 		// Return the processed data
 		return [this.helpers.returnJsonArray(returnData)];
 	}
+
+	// These class methods are kept for reference but are no longer used directly
+	// Instead we use local functions inside the execute method to avoid 'this' binding issues
 }

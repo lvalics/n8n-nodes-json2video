@@ -1,0 +1,73 @@
+{
+  "id": "q83gk40w",
+  "comment": "Black Friday",
+  "width": 1080,
+  "height": 1080,
+  "quality": "medium",
+  "draft": false,
+  "scenes": [
+    {
+      "id": "qrjouu9h",
+      "comment": "Scene 1",
+      "elements": [
+        {
+          "id": "qwlgqqqx",
+          "type": "video",
+          "src": "https://player.vimeo.com/external/479469875.hd.mp4?s=ade6ed9349f626b39a364316db661a0cbfcc5f7a&profile_id=174&oauth2_token_id=57447761",
+          "scale": {
+            "width": 1920,
+            "height": 1080
+          },
+          "x": 0,
+          "y": 0
+        },
+        {
+          "id": "qdlq2snu",
+          "type": "component",
+          "component": "advanced/001",
+          "settings": {
+            "animation": {
+              "text": [
+                "BLACK FRIDAY"
+              ],
+              "font-family": "Anton",
+              "font-size": "15vw",
+              "text-shadow": "10px 10px 5px rgba(0,0,0,0.5)"
+            }
+          },
+          "duration": 7,
+          "comment": "Text"
+        },
+        {
+          "id": "qac55822",
+          "type": "component",
+          "comment": "Animated button",
+          "component": "advanced/050",
+          "settings": {
+            "button": {
+              "text": [
+                "30% OFF"
+              ],
+              "background": "red",
+              "font-size": "10vw",
+              "padding": "0.5vw 5vw",
+              "border-radius": "3vw",
+              "border": "1vw solid",
+              "border-color": "rgba(200,0,0,0.5)",
+              "font-family": "Montserrat"
+            }
+          },
+          "position": "custom",
+          "y": 300,
+          "start": 2.5
+        }
+      ],
+      "duration": 5
+    }
+  ],
+  "elements": [],
+  "resolution": "squared",
+  "fps": 25,
+  "settings": {},
+  "cache": true
+}
