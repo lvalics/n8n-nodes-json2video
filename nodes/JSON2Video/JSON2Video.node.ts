@@ -4,13 +4,18 @@ import {
 	INodeExecutionData,
 	INodeType,
 	INodeTypeDescription,
+	ILoadOptionsFunctions,
+	INodePropertyOptions,
 	NodeConnectionType,
 } from 'n8n-workflow';
 
 // Import template loader functions
 import {
-  loadTemplate
-} from './JSON2VideoTemplateLoader.node';
+  loadTemplate,
+  getTemplateCategories,
+  getTemplatesForCategory,
+  applyTemplateCustomizations
+} from './templateLoader';
 
 export class JSON2Video implements INodeType {
 	// Static template options are used instead of dynamic loading
@@ -599,11 +604,9 @@ export class JSON2Video implements INodeType {
 				displayName: 'Template Category',
 				name: 'templateCategory',
 				type: 'options',
-				options: [
-					{ name: 'Basic', value: 'basic' },
-					{ name: 'Marketing', value: 'marketing' },
-					{ name: 'News', value: 'news' },
-				],
+				typeOptions: {
+					loadOptionsMethod: 'getTemplateCategories',
+				},
 				default: 'basic',
 				required: true,
 				description: 'Category of templates to choose from',
@@ -617,29 +620,10 @@ export class JSON2Video implements INodeType {
 				displayName: 'Template',
 				name: 'templateName',
 				type: 'options',
-				options: [
-					// Basic category templates
-					{ name: 'Hello World - Simple Text Animation', value: 'hello-world' },
-					{ name: 'Image Slideshow - Transitions Between Images', value: 'image-slideshow' },
-					{ name: 'Video with Text Overlay - Basic Text Over Video', value: 'video-with-text-overlay' },
-					{ name: 'Video with Watermark - Add Logo or Watermark', value: 'video-with-watermark' },
-					
-					// Marketing category templates
-					{ name: 'Black Friday Promo - Sale Announcement', value: 'black-friday-promo' },
-					{ name: 'Corporate Video - Professional Presentation', value: 'corporate-video' },
-					{ name: 'Event Agenda - Schedule Presentation', value: 'event-agenda' },
-					{ name: 'Event Speakers - Speaker Profiles', value: 'event-speakers' },
-					{ name: 'Motivational - Inspirational Quote Card', value: 'motivational' },
-					{ name: 'Promo - Variables Template with Call to Action', value: 'promo' },
-					{ name: 'Quote - Quotation with Background', value: 'quote' },
-					{ name: 'Real Estate - Property Presentation (Landscape)', value: 'real-estate' },
-					{ name: 'Real Estate Story - Property Tour (Portrait)', value: 'real-estate-2' },
-					{ name: 'Slide Text Left - Animated Text Entrance', value: 'slide-text-left' },
-					
-					// News category templates
-					{ name: 'CNN Style Lower Third - News Caption', value: 'cnn-lower-third' },
-					{ name: 'One Line Lower Third - Simple News Caption', value: 'one-line-lower-third' },
-				],
+				typeOptions: {
+					loadOptionsMethod: 'getTemplateOptions',
+					loadOptionsDependsOn: ['templateCategory'],
+				},
 				default: 'hello-world',
 				required: true,
 				description: 'Template to use as starting point',
@@ -649,7 +633,120 @@ export class JSON2Video implements INodeType {
 					},
 				},
 			},
+			// Template customization fields
+			{
+				displayName: 'Customize Template',
+				name: 'customizeTemplate',
+				type: 'boolean',
+				default: false,
+				description: 'Whether to customize the template content',
+				displayOptions: {
+					show: {
+						operation: ['createMovieFromTemplate'],
+					},
+				},
+			},
+			// Text customization collection
+			{
+				displayName: 'Text Customization',
+				name: 'textCustomization',
+				type: 'collection',
+				placeholder: 'Add Text Customization',
+				default: {},
+				displayOptions: {
+					show: {
+						operation: ['createMovieFromTemplate'],
+						customizeTemplate: [true],
+					},
+				},
+				options: [
+					{
+						displayName: 'Main Title',
+						name: 'mainTitle',
+						type: 'string',
+						default: '',
+						description: 'Main title text to replace in the template',
+					},
+					{
+						displayName: 'Subtitle',
+						name: 'subtitle',
+						type: 'string',
+						default: '',
+						description: 'Subtitle text to replace in the template',
+					},
+					{
+						displayName: 'Body Text',
+						name: 'bodyText',
+						type: 'string',
+						typeOptions: {
+							rows: 4,
+						},
+						default: '',
+						description: 'Body text to replace in the template',
+					},
+				],
+			},
+			// Media customization collection
+			{
+				displayName: 'Media Customization',
+				name: 'mediaCustomization',
+				type: 'collection',
+				placeholder: 'Add Media Customization',
+				default: {},
+				displayOptions: {
+					show: {
+						operation: ['createMovieFromTemplate'],
+						customizeTemplate: [true],
+					},
+				},
+				options: [
+					{
+						displayName: 'Main Image URL',
+						name: 'mainImageUrl',
+						type: 'string',
+						default: '',
+						description: 'URL of main image to replace in the template',
+					},
+					{
+						displayName: 'Background Video URL',
+						name: 'backgroundVideoUrl',
+						type: 'string',
+						default: '',
+						description: 'URL of background video to replace in the template',
+					},
+					{
+						displayName: 'Logo URL',
+						name: 'logoUrl',
+						type: 'string',
+						default: '',
+						description: 'URL of logo to replace in the template',
+					},
+					{
+						displayName: 'Background Color',
+						name: 'backgroundColor',
+						type: 'color',
+						default: '',
+						description: 'Background color to replace in the template',
+					},
+				],
+			},
 		],
+	};
+
+	// Methods for dynamic loading of options
+	methods = {
+		loadOptions: {
+			async getTemplateCategories(): Promise<INodePropertyOptions[]> {
+				return getTemplateCategories();
+			},
+			async getTemplateOptions(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
+				const templateCategory = this.getCurrentNodeParameter('templateCategory') as string;
+				if (!templateCategory) {
+					return [];
+				}
+				return getTemplatesForCategory(templateCategory);
+			},
+		},
 	};
 
 	// This is the function that will be called by n8n when the node is executed
@@ -887,6 +984,18 @@ export class JSON2Video implements INodeType {
 								}
 							}
 						}
+					}
+
+					// Check if template customization is enabled
+					const customizeTemplate = this.getNodeParameter('customizeTemplate', i, false) as boolean;
+					
+					if (customizeTemplate) {
+						// Get customization parameters
+						const textCustomization = this.getNodeParameter('textCustomization', i, {}) as IDataObject;
+						const mediaCustomization = this.getNodeParameter('mediaCustomization', i, {}) as IDataObject;
+						
+						// Apply customizations to the template
+						applyTemplateCustomizations(movieData, textCustomization, mediaCustomization);
 					}
 
 					// Make the API request to create the movie
