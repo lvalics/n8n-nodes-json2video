@@ -1,0 +1,319 @@
+{
+  "id": "qbtz6n8u",
+  "comment": "Variables promo",
+  "width": 1080,
+  "height": 1080,
+  "quality": "high",
+  "draft": false,
+  "variables": {
+    "slide1Text": "VARIABLES<br>ARE<br>FINALLY<br>HERE",
+    "slide1Voice": "Variables are finally here!",
+    "slide2Text": "Now you can use variables in your video templates",
+    "slide3Text": "Meaning you can reuse the templates easily",
+    "slide4Text": "Define a variable in your JSON and use it like a macro",
+    "slide5Text": "Integrate with no-code tools much faster"
+  },
+  "scenes": [
+    {
+      "id": "qvxfu314",
+      "comment": "Scene 1",
+      "elements": [
+        {
+          "id": "qq97y59z",
+          "type": "component",
+          "component": "shape/rectangle",
+          "settings": {
+            "rectangle1": {
+              "left": "0%",
+              "top": "0%",
+              "width": "100%",
+              "height": "100%",
+              "animate": {},
+              "background": "linear-gradient(120deg, #FF2B2B 0%, #0039CB 100%)"
+            }
+          },
+          "comment": "Background",
+          "duration": 3,
+          "fade-out": 0.5
+        },
+        {
+          "id": "q46k3sdw",
+          "type": "component",
+          "component": "advanced/001",
+          "settings": {
+            "animation": {
+              "font-family": "Anton",
+              "font-size": "9vw",
+              "text": "{{slide1Text}}"
+            }
+          },
+          "fade-out": 0.5,
+          "duration": 3,
+          "comment": "Variables are here"
+        },
+        {
+          "id": "q6mp3c8f",
+          "type": "component",
+          "component": "shape/rectangle",
+          "settings": {
+            "rectangle1": {
+              "left": "90%",
+              "top": "100%",
+              "width": "30vw",
+              "height": "30vw",
+              "animate": {
+                "duration": "1500",
+                "easing": "easeOutCubic",
+                "left": "37%",
+                "rotate": "0deg",
+                "top": "25%"
+              },
+              "background-size": "200px",
+              "background-image": "url('https://json2video.com/tools/visual-editor/images/logo.svg')",
+              "background-position": "center",
+              "border-width": "1vw 1vw 4vw 1vw",
+              "border-color": "white",
+              "border-radius": "0.5vw",
+              "rotate": "30deg",
+              "background-repeat": "no-repeat"
+            }
+          },
+          "comment": "Logo",
+          "start": 3
+        },
+        {
+          "id": "qmzx9eov",
+          "type": "component",
+          "component": "advanced/001",
+          "settings": {
+            "animation": {
+              "text": "JSON2Video.com",
+              "font-family": "Lato",
+              "font-size": "9vw",
+              "font-weight": "300"
+            }
+          },
+          "comment": "JSON2Video",
+          "start": 4,
+          "position": "custom",
+          "y": 70
+        },
+        {
+          "id": "q9uxmozl",
+          "type": "voice",
+          "voice": "en-US-TonyNeural",
+          "comment": "Voice",
+          "start": 1,
+          "text": "{{slide1Voice}}"
+        }
+      ]
+    },
+    {
+      "id": "qqq0oqp3",
+      "comment": "Scene 2",
+      "elements": [
+        {
+          "id": "qx323woj",
+          "type": "text",
+          "style": "003",
+          "settings": {
+            "font-size": "9vw",
+            "font-family": "Lato",
+            "font-weight": "300"
+          },
+          "position": "center-center",
+          "width": 850,
+          "text": "{{slide2Text}}"
+        },
+        {
+          "id": "qu3oiy7k",
+          "type": "voice",
+          "voice": "en-US-TonyNeural",
+          "text": "{{slide2Text}}"
+        },
+        {
+          "id": "q2190mbk",
+          "type": "audiogram",
+          "x": 0,
+          "y": 780,
+          "width": 1079,
+          "height": 154,
+          "position": "custom",
+          "color": "#2ea4ff",
+          "amplitude": 10
+        }
+      ]
+    },
+    {
+      "id": "q9kwg64c",
+      "comment": "Scene 3",
+      "elements": [
+        {
+          "id": "qjl6jk9t",
+          "type": "text",
+          "style": "003",
+          "settings": {
+            "font-size": "9vw",
+            "font-family": "Lato",
+            "font-weight": "300"
+          },
+          "position": "center-center",
+          "width": 850,
+          "text": "{{slide3Text}}"
+        },
+        {
+          "id": "q9gdsggk",
+          "type": "voice",
+          "voice": "en-US-TonyNeural",
+          "text": "{{slide3Text}}"
+        },
+        {
+          "id": "qjvv6gen",
+          "type": "audiogram",
+          "x": 0,
+          "y": 780,
+          "width": 1079,
+          "height": 154,
+          "position": "custom",
+          "color": "#2ea4ff",
+          "amplitude": 10
+        }
+      ]
+    },
+    {
+      "id": "q74bbs5t",
+      "comment": "Scene 4",
+      "elements": [
+        {
+          "id": "qwqkm1g5",
+          "type": "text",
+          "style": "003",
+          "settings": {
+            "font-size": "9vw",
+            "font-family": "Lato",
+            "font-weight": "300"
+          },
+          "position": "center-center",
+          "width": 850,
+          "text": "{{slide4Text}}"
+        },
+        {
+          "id": "qk98h02r",
+          "type": "voice",
+          "voice": "en-US-TonyNeural",
+          "text": "{{slide4Text}}"
+        },
+        {
+          "id": "q8ep4wxt",
+          "type": "audiogram",
+          "x": 0,
+          "y": 780,
+          "width": 1079,
+          "height": 154,
+          "position": "custom",
+          "color": "#2ea4ff",
+          "amplitude": 10
+        }
+      ]
+    },
+    {
+      "id": "qoubzoyr",
+      "comment": "Scene 5",
+      "elements": [
+        {
+          "id": "qrfqqv9n",
+          "type": "text",
+          "style": "003",
+          "settings": {
+            "font-size": "9vw",
+            "font-family": "Lato",
+            "font-weight": "300"
+          },
+          "position": "center-center",
+          "width": 850,
+          "text": "{{slide5Text}}"
+        },
+        {
+          "id": "q2awknue",
+          "type": "voice",
+          "voice": "en-US-TonyNeural",
+          "text": "{{slide5Text}}"
+        },
+        {
+          "id": "qq4j9hnc",
+          "type": "audiogram",
+          "x": 0,
+          "y": 780,
+          "width": 1079,
+          "height": 154,
+          "position": "custom",
+          "color": "#2ea4ff",
+          "amplitude": 10
+        }
+      ]
+    },
+    {
+      "id": "qhftsqq9",
+      "comment": "New scene",
+      "elements": [
+        {
+          "id": "qjbqqjh2",
+          "type": "component",
+          "component": "advanced/001",
+          "settings": {
+            "animation": {
+              "text": "TEST IT NOW",
+              "font-family": "Anton",
+              "font-size": "18vw"
+            }
+          },
+          "comment": "Test it now",
+          "x": 0,
+          "y": 0,
+          "width": 1079,
+          "height": 862
+        },
+        {
+          "id": "qiufzggo",
+          "type": "voice",
+          "text": "Test it NOW!",
+          "voice": "en-US-TonyNeural"
+        },
+        {
+          "id": "quufd72a",
+          "type": "component",
+          "component": "advanced/050",
+          "settings": {
+            "button": {
+              "background": "#2ea4ff",
+              "padding": "0 15vw",
+              "box-shadow": "2vw 2vw 0 white",
+              "text": "SIGN UP!",
+              "font-size": "10vw",
+              "font-family": "Anton"
+            }
+          },
+          "comment": "Button",
+          "x": 0,
+          "y": 346,
+          "width": 1079,
+          "height": 733,
+          "extra-time": 3,
+          "start": 1.5
+        }
+      ],
+      "duration": 5
+    }
+  ],
+  "elements": [
+    {
+      "id": "qccnxlyf",
+      "type": "audio",
+      "src": "https://json2video-test.s3.amazonaws.com/assets/audios/advertime.mp3",
+      "fade-out": 1,
+      "duration": -2,
+      "volume": 0.2
+    }
+  ],
+  "resolution": "squared"
+}

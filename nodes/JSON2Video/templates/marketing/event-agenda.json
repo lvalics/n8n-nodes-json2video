@@ -1,0 +1,123 @@
+{
+  "id": "qm5is1re",
+  "comment": "Event agenda",
+  "resolution": "full-hd",
+  "quality": "high",
+  "draft": false,
+  "scenes": [
+    {
+      "id": "q2vgxdkd",
+      "background-color": "#000000",
+      "elements": [
+        {
+          "id": "qtty036p",
+          "type": "image",
+          "src": "https://assets.json2video.com/assets/images/london-03.jpg",
+          "x": -490
+        },
+        {
+          "id": "qki4glm6",
+          "type": "text",
+          "style": "001",
+          "text": "LONDON WEEK",
+          "settings": {
+            "font-family": "Bebas Neue",
+            "font-weight": "400",
+            "font-size": "30vw",
+            "vertical-align": "bottom",
+            "horizontal-align": "left",
+            "text-align": "left",
+            "opacity": "0.5",
+            "line-height": "25vw"
+          },
+          "width": 960,
+          "x": 30,
+          "cache": false
+        },
+        {
+          "id": "q0bplz3i",
+          "type": "component",
+          "component": "basic/100",
+          "settings": {
+            "box": {
+              "initial_left": "100%",
+              "final_left": "50%",
+              "background": "#ff7f50",
+              "box-shadow": "none",
+              "duration": 2000
+            }
+          }
+        },
+        {
+          "id": "q5vz8efg",
+          "type": "text",
+          "style": "001",
+          "text": "agenda",
+          "settings": {
+            "font-family": "Bebas Neue",
+            "font-weight": "400",
+            "color": "black",
+            "font-size": "10vw"
+          },
+          "x": 960,
+          "y": 40,
+          "width": 960,
+          "height": 200
+        },
+        {
+          "id": "qj8qpbsz",
+          "type": "component",
+          "component": "basic/125",
+          "settings": {
+            "table": {
+              "width": "100vw",
+              "font-size": "4vw",
+              "font-family": "Lato",
+              "font-weight": "300",
+              "border-spacing": "0 4vw"
+            },
+            "header": {
+              "display": "none",
+              "column-widths": [
+                "35%",
+                "65%"
+              ]
+            },
+            "first-column": {
+              "border-right": "4px solid black",
+              "text-align": "right"
+            },
+            "cells": {
+              "padding": "5px 10px"
+            },
+            "data": {
+              "columns": [
+                "agenda",
+                ""
+              ],
+              "rows": [
+                [
+                  "monday",
+                  "<b>Lorem ipsum dolor sit amet</b><br>consectetur adipiscing elit"
+                ],
+                [
+                  "tuesday",
+                  "<b>Pellentesque a nisl </b><br>dapibus quam vitae felis malesuada"
+                ],
+                [
+                  "wednesday",
+                  "<b>Morbi lectus ligula</b><br>Nam semper euismod leo sit amet congue"
+                ]
+              ]
+            }
+          },
+          "width": 960,
+          "x": 960,
+          "start": 2
+        }
+      ],
+      "duration": 10
+    }
+  ],
+  "elements": []
+}

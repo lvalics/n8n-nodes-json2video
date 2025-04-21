@@ -1,0 +1,80 @@
+{
+  "id": "qm3y7f9y",
+  "comment": "Default movie",
+  "width": 1920,
+  "height": 1080,
+  "quality": "medium",
+  "draft": false,
+  "scenes": [
+    {
+      "comment": "New scene",
+      "id": "qefss551",
+      "elements": [
+        {
+          "type": "image",
+          "id": "q2x0wfez",
+          "src": "https://assets.json2video.com/sites/real-estate/001.webp",
+          "scale": {
+            "width": 1920,
+            "height": 1281
+          },
+          "x": 0,
+          "y": 0
+        },
+        {
+          "id": "qi5lw1ek",
+          "type": "component",
+          "component": "basic/100",
+          "settings": {
+            "box": {
+              "background": "coral",
+              "box-shadow": "none",
+              "final_width": "50%"
+            }
+          },
+          "comment": "Elastic box",
+          "rotate": {
+            "angle": 8
+          },
+          "x": -327,
+          "y": -387,
+          "width": 2280,
+          "height": 1714
+        },
+        {
+          "id": "qoq5bx6f",
+          "type": "component",
+          "component": "basic/000",
+          "settings": {
+            "headline": {
+              "text": "Lorem ipsum dolor sit amet",
+              "color": "#111",
+              "font-size": "10vw"
+            },
+            "body": {
+              "text": [
+                "Lorem ipsum dolor sit amet, <em>consectetur adipiscing elit</em>, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+                "Phasellus elit sem, dignissim convallis ligula vitae, venenatis fermentum risus. Suspendisse viverra ut ipsum eget ullamcorper."
+              ],
+              "color": "#333",
+              "font-size": "7vw"
+            }
+          },
+          "width": 642,
+          "height": 973,
+          "x": 43,
+          "y": 55,
+          "duration": 10,
+          "comment": "Simple card",
+          "start": 1.5
+        }
+      ],
+      "duration": 8
+    }
+  ],
+  "elements": [],
+  "resolution": "custom",
+  "fps": 25,
+  "settings": {},
+  "cache": true
+}

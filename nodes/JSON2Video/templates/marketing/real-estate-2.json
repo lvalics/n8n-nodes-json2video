@@ -1,0 +1,388 @@
+{
+  "id": "qd56dylt",
+  "comment": "Default movie",
+  "width": 1080,
+  "height": 1920,
+  "quality": "medium",
+  "draft": false,
+  "scenes": [
+    {
+      "id": "q952qhwi",
+      "comment": "Scene 1",
+      "elements": [
+        {
+          "id": "q2nwos8c",
+          "type": "image",
+          "src": "https://json2video-test.s3.amazonaws.com/assets/images/real-estate/house-seattle/house-seattle-01.jpeg",
+          "scale": {
+            "width": 1920,
+            "height": 1080
+          },
+          "x": -520,
+          "y": 130
+        },
+        {
+          "id": "qmxazrdn",
+          "type": "text",
+          "text": "STAY AT YOUR<br>DREAM HOUSE",
+          "duration": 5,
+          "x": 0,
+          "y": 1154,
+          "width": 1079,
+          "height": 765,
+          "style": "009",
+          "settings": {
+            "font-family": "Anton",
+            "font-size": "16vw",
+            "line-height": "12vw"
+          }
+        }
+      ],
+      "background-color": "#0296C8"
+    },
+    {
+      "id": "qv0m3977",
+      "comment": "Scene 2",
+      "elements": [
+        {
+          "id": "q8hpdfv4",
+          "type": "image",
+          "src": "https://json2video-test.s3.amazonaws.com/assets/images/real-estate/house-seattle/house-seattle-06.jpeg",
+          "scale": {
+            "width": 1920,
+            "height": 1080
+          },
+          "x": -3,
+          "y": -1,
+          "pan": "right"
+        },
+        {
+          "id": "q27tp8ba",
+          "type": "component",
+          "component": "basic/000",
+          "settings": {
+            "headline": {
+              "text": [
+                "Treat yourself<br>this summer"
+              ],
+              "color": "black",
+              "font-size": "16vw",
+              "font-family": "Anton",
+              "font-weight": "400",
+              "text-align": "center",
+              "line-height": "16vw"
+            },
+            "body": {
+              "text": [
+                "&nbsp;",
+                "Port Angeles, WA"
+              ],
+              "color": "#333",
+              "text-align": "center",
+              "font-size": "6vw"
+            }
+          },
+          "width": 878,
+          "height": 644,
+          "x": 113,
+          "y": 1224,
+          "duration": 10,
+          "comment": "Simple card"
+        }
+      ],
+      "background-color": "#F2F2F2",
+      "duration": 8,
+      "transition": {
+        "style": "circleopen",
+        "duration": 1
+      }
+    },
+    {
+      "id": "qo8cbtss",
+      "comment": "New scene",
+      "elements": [
+        {
+          "id": "qi9ij5ud",
+          "type": "image",
+          "src": "https://json2video-test.s3.amazonaws.com/assets/images/real-estate/house-seattle/house-seattle-02.jpeg",
+          "scale": {
+            "width": 2880,
+            "height": 1920
+          },
+          "x": 0,
+          "y": 0,
+          "pan": "right"
+        },
+        {
+          "id": "q8xm6o3k",
+          "type": "component",
+          "component": "basic/052",
+          "settings": {
+            "headline": {
+              "text": [
+                "Over the lake"
+              ],
+              "font-size": "80px"
+            },
+            "section": {
+              "text": [
+                ""
+              ]
+            }
+          },
+          "cache": false,
+          "comment": "Over the lake"
+        }
+      ],
+      "duration": 6,
+      "transition": {
+        "style": "circleopen",
+        "duration": 1
+      }
+    },
+    {
+      "id": "qgxvwwgg",
+      "comment": "New scene",
+      "elements": [
+        {
+          "id": "qxu1yohy",
+          "type": "image",
+          "src": "https://json2video-test.s3.amazonaws.com/assets/images/real-estate/house-seattle/house-seattle-03.jpeg",
+          "scale": {
+            "width": 2880,
+            "height": 1920
+          },
+          "x": -725,
+          "y": -4,
+          "pan": "right"
+        },
+        {
+          "id": "qoy0q7se",
+          "type": "component",
+          "component": "basic/052",
+          "settings": {
+            "headline": {
+              "text": [
+                "Living room with views"
+              ],
+              "font-size": "80px"
+            },
+            "section": {
+              "text": [
+                ""
+              ]
+            }
+          },
+          "cache": false,
+          "comment": "Living room with views"
+        }
+      ],
+      "duration": 6,
+      "transition": {
+        "style": "circleopen",
+        "duration": 1
+      }
+    },
+    {
+      "id": "qieg0it2",
+      "comment": "New scene",
+      "elements": [
+        {
+          "id": "q2aj241d",
+          "type": "image",
+          "src": "https://json2video-test.s3.amazonaws.com/assets/images/real-estate/house-seattle/house-seattle-04.jpeg",
+          "scale": {
+            "width": 2880,
+            "height": 1920
+          },
+          "x": -725,
+          "y": -4,
+          "pan": "right"
+        },
+        {
+          "id": "qj744bnw",
+          "type": "component",
+          "component": "basic/052",
+          "settings": {
+            "headline": {
+              "text": [
+                "Kitchen"
+              ],
+              "font-size": "80px"
+            },
+            "section": {
+              "text": [
+                ""
+              ]
+            }
+          },
+          "cache": false,
+          "comment": "Kitchen"
+        }
+      ],
+      "duration": 6,
+      "transition": {
+        "style": "circleopen",
+        "duration": 1
+      }
+    },
+    {
+      "id": "qxp6uo5m",
+      "comment": "Scene 1",
+      "elements": [
+        {
+          "id": "qxbh5ozp",
+          "type": "image",
+          "src": "https://json2video-test.s3.amazonaws.com/assets/images/real-estate/house-seattle/house-seattle-01.jpeg",
+          "scale": {
+            "width": 1920,
+            "height": 1080
+          },
+          "x": -520,
+          "y": 130
+        },
+        {
+          "id": "q1zoqlik",
+          "type": "component",
+          "component": "advanced/060",
+          "settings": {
+            "counter": {
+              "text": [
+                "$__num__"
+              ],
+              "from": "400",
+              "to": "230",
+              "duration": 3000,
+              "color": "white",
+              "text-shadow": ".2vw .2vw .2vw rgba(50,50,50,0.5)",
+              "font-size": "20vw",
+              "font-family": "Anton",
+              "font-weight": "400"
+            }
+          },
+          "duration": 10,
+          "comment": "Counter",
+          "x": 0,
+          "y": 1211,
+          "width": 1079,
+          "height": 708
+        },
+        {
+          "id": "q9dt92je",
+          "type": "text",
+          "text": "just",
+          "style": "001",
+          "x": -3,
+          "y": 1199,
+          "width": 1079,
+          "height": 345,
+          "settings": {
+            "font-family": "Anton",
+            "font-size": "8vw",
+            "font-weight": "400"
+          }
+        },
+        {
+          "id": "qwsw8ovh",
+          "type": "text",
+          "text": "per night",
+          "style": "001",
+          "x": 0,
+          "y": 1573,
+          "width": 1079,
+          "height": 345,
+          "settings": {
+            "font-family": "Anton",
+            "font-size": "8vw",
+            "font-weight": "400"
+          }
+        }
+      ],
+      "background-color": "#0296C8",
+      "transition": {
+        "style": "circlecrop",
+        "duration": 1
+      }
+    },
+    {
+      "id": "qnsudhic",
+      "comment": "Scene 1",
+      "elements": [
+        {
+          "id": "q5tmxpqi",
+          "type": "image",
+          "src": "https://json2video-test.s3.amazonaws.com/assets/images/real-estate/house-seattle/house-seattle-01.jpeg",
+          "scale": {
+            "width": 1920,
+            "height": 1080
+          },
+          "x": -520,
+          "y": 130
+        },
+        {
+          "id": "qyg1o6or",
+          "type": "text",
+          "text": "best-rentals.com",
+          "style": "001",
+          "x": -3,
+          "y": 1199,
+          "width": 1079,
+          "height": 345,
+          "settings": {
+            "font-family": "Anton",
+            "font-size": "8vw",
+            "font-weight": "400"
+          }
+        },
+        {
+          "id": "qw3bp3u3",
+          "type": "component",
+          "component": "advanced/051",
+          "settings": {
+            "button": {
+              "background": "red",
+              "border": "2px solid #b30000",
+              "border-radius": "0",
+              "padding": "0 15vw",
+              "text": [
+                "BOOK NOW !"
+              ],
+              "color": "white",
+              "text-shadow": "2px 2px 0px rgba(50,50,50,0.5)",
+              "font-size": "10vw",
+              "font-family": "Anton"
+            },
+            "cursor": {
+              "width": "10vw",
+              "height": "10vw"
+            }
+          },
+          "duration": 10,
+          "comment": "Button with mouse click",
+          "x": 0,
+          "y": 1419,
+          "width": 1079,
+          "height": 499
+        }
+      ],
+      "background-color": "#0296C8",
+      "transition": {
+        "style": "fade",
+        "duration": 0.5
+      }
+    }
+  ],
+  "elements": [
+    {
+      "id": "qd7i7v46",
+      "type": "audio",
+      "src": "https://json2video-test.s3.amazonaws.com/assets/audios/and-just-like-that.mp3",
+      "duration": -2,
+      "fade-out": 2
+    }
+  ],
+  "resolution": "instagram-story",
+  "fps": 25,
+  "settings": {},
+  "cache": true
+}

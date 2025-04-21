@@ -1,0 +1,126 @@
+{
+  "id": "q75xrw5y",
+  "resolution": "full-hd",
+  "quality": "high",
+  "draft": false,
+  "scenes": [
+    {
+      "id": "qj98qpq5",
+      "background-color": "#ff7f50",
+      "elements": [
+        {
+          "id": "q2h7j4t6",
+          "type": "text",
+          "style": "006",
+          "text": "SPEAKERS",
+          "height": 280,
+          "settings": {
+            "font-family": "Bebas Neue",
+            "font-weight": "400",
+            "font-size": "10vw",
+            "letter-spacing": "normal",
+            "color": "black"
+          }
+        },
+        {
+          "id": "qy59k4wt",
+          "type": "component",
+          "component": "basic/120",
+          "width": 400,
+          "x": 260,
+          "y": 350,
+          "settings": {
+            "card": {
+              "text-align": "left",
+              "vertical-align": "top",
+              "color": "black"
+            },
+            "image": {
+              "background-image": "url(https://assets.json2video.com/assets/images/man-01.jpg)",
+              "border": "none",
+              "border-radius": "10%",
+              "margin": "4vw 0"
+            },
+            "name": {
+              "text": "Damiano Tre"
+            },
+            "title": {
+              "text": "Founder"
+            },
+            "description": {
+              "text": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam euismod cursus ipsum eget lobortis. "
+            }
+          },
+          "cache": false,
+          "start": 1
+        },
+        {
+          "id": "qge9ixaz",
+          "type": "component",
+          "component": "basic/120",
+          "width": 400,
+          "x": 760,
+          "y": 350,
+          "settings": {
+            "card": {
+              "text-align": "left",
+              "vertical-align": "top",
+              "color": "black"
+            },
+            "image": {
+              "background-image": "url(https://assets.json2video.com/assets/images/woman-04.jpg)",
+              "border": "none",
+              "border-radius": "10%",
+              "margin": "4vw 0"
+            },
+            "name": {
+              "text": "Alba Gomes"
+            },
+            "title": {
+              "text": "Chief Executive Officer"
+            },
+            "description": {
+              "text": "Praesent ut posuere nisi, et dignissim sapien. Mauris pharetra arcu sed imperdiet ultricies."
+            }
+          },
+          "cache": false,
+          "start": 2
+        },
+        {
+          "id": "q7fjt844",
+          "type": "component",
+          "component": "basic/120",
+          "width": 400,
+          "x": 1260,
+          "y": 350,
+          "settings": {
+            "card": {
+              "text-align": "left",
+              "vertical-align": "top",
+              "color": "black"
+            },
+            "image": {
+              "background-image": "url(https://assets.json2video.com/assets/images/man-02.jpg)",
+              "border": "none",
+              "border-radius": "10%",
+              "margin": "4vw 0"
+            },
+            "name": {
+              "text": "Jan Downey"
+            },
+            "title": {
+              "text": "Chief Operations Officer"
+            },
+            "description": {
+              "text": "Pellentesque et sem id dui egestas ullamcorper non sit amet diam. Sed porttitor, nibh eget tempus blandit."
+            }
+          },
+          "cache": false,
+          "start": 3
+        }
+      ],
+      "duration": 10
+    }
+  ],
+  "elements": []
+}

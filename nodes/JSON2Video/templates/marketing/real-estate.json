@@ -1,0 +1,339 @@
+{
+  "id": "qm3cqo1f",
+  "comment": "Real Estate 1",
+  "width": 1920,
+  "height": 1080,
+  "variables": {
+    "title": "House for sale",
+    "subtitleLeft": "Call us",
+    "subtitleRight": "+1 (555) 1234 5678",
+    "logoURL": "https://cdn.json2video.com/assets/images/real-estate/logo.png",
+    "introBackgroundImage": "https://cdn.json2video.com/assets/images/real-estate/flat-barcelona/000.webp",
+    "musicURL": "https://cdn.json2video.com/assets/audios/advertime.mp3",
+    "musicVolume": 1,
+    "@musicVolume": "0.1=Very low|0.25=Low|0.5=Mid low|1=Regular",
+    "primaryColor": "#ffd864",
+    "?primaryColor": "Use HEX color. Example '#FF0000' for red.",
+    "realtorName": "John Doe",
+    "realtorTitle": "Real Estate agent",
+    "realtorEmailAddress": "john.doe@best-properties.com",
+    "realtorPhoneNumber": "+1 (555) 1234 5678",
+    "iconURL": "https://cdn.json2video.com/assets/images/real-estate/sofa-bold.png",
+    "textboxTitle": "Property details",
+    "textboxLine1": "Area: 2,100 sq ft",
+    "textboxLine2": "4 Bedrooms",
+    "textboxLine3": "2 Bathrooms",
+    "textboxLine4": "1 Parking space",
+    "price": "$720,000",
+    "voiceModel": "none",
+    "@voiceModel": "none=No voiceover|azure=Azure (no extra credits)|elevenlabs=Elevenlabs (consume extra credits)",
+    "voiceID": "en-GB-SoniaNeural",
+    "?voiceID": "Choose a voice ID. Check the available [Azure voices](https://json2video.com/ai-voices/azure/languages/) and [Elevenlabs voices](https://json2video.com/ai-voices/elevenlabs/elevenlabs-voice-list/)",
+    "voiceoverText": "This is an amazing luxury property.",
+    "imageList": [
+      {
+        "imageURL": "https://cdn.json2video.com/assets/images/real-estate/flat-barcelona/001.webp"
+      },
+      {
+        "imageURL": "https://cdn.json2video.com/assets/images/real-estate/flat-barcelona/003.webp"
+      },
+      {
+        "imageURL": "https://cdn.json2video.com/assets/images/real-estate/flat-barcelona/006.webp"
+      },
+      {
+        "imageURL": "https://cdn.json2video.com/assets/images/real-estate/flat-barcelona/007.webp"
+      },
+      {
+        "imageURL": "https://cdn.json2video.com/assets/images/real-estate/flat-barcelona/009.webp"
+      }
+    ]
+  },
+  "scenes": [
+    {
+      "id": "q1mdl98b",
+      "comment": "Intro scene",
+      "elements": [
+        {
+          "id": "qoyllr6d",
+          "type": "image",
+          "src": "{{introBackgroundImage}}",
+          "scale": {
+            "width": 1920,
+            "height": 1280
+          },
+          "x": 0,
+          "y": 0
+        },
+        {
+          "id": "q3cxsxam",
+          "type": "component",
+          "component": "basic/100",
+          "settings": {
+            "box": {
+              "background": "rgba(0,0,0,0.4)",
+              "box-shadow": "none",
+              "final_width": "100%",
+              "duration": "100"
+            }
+          },
+          "comment": "Darken image filter"
+        },
+        {
+          "id": "qs9btwnp",
+          "comment": "Title",
+          "type": "text",
+          "text": "{{title}}",
+          "duration": 5,
+          "style": "007",
+          "settings": {
+            "font-family": "Open Sans",
+            "font-size": "6vw",
+            "text-shadow": "5px 5px rgba(33,33,33,0.8)",
+            "font-weight": "700"
+          },
+          "x": 1,
+          "y": 594,
+          "width": 1918,
+          "height": 191
+        },
+        {
+          "id": "qsnjlxun",
+          "comment": "Subtitle",
+          "type": "component",
+          "component": "basic/052",
+          "settings": {
+            "headline": {
+              "text": [
+                "{{subtitleRight}}"
+              ]
+            },
+            "card": {
+              "vertical-align": "center",
+              "horizontal-align": "right"
+            },
+            "section": {
+              "text": [
+                "{{subtitleLeft}}"
+              ],
+              "background-color": "rgb(255,215,100)",
+              "color": "black"
+            }
+          },
+          "cache": false,
+          "x": 635,
+          "y": 685,
+          "width": 1352,
+          "height": 252,
+          "start": 2
+        },
+        {
+          "id": "q9sdsthz",
+          "type": "image",
+          "src": "{{logoURL}}",
+          "position": "center-center",
+          "comment": "Logo",
+          "width": 128,
+          "height": -1
+        }
+      ],
+      "duration": 5
+    },
+    {
+      "id": "qbd83v4b",
+      "comment": "Image List",
+      "iterate": "imageList",
+      "elements": [
+        {
+          "id": "qjjn521v",
+          "comment": "Background image",
+          "type": "image",
+          "src": "{{imageURL}}",
+          "width": 1920,
+          "height": 1280,
+          "pan": "left"
+        },
+        {
+          "id": "qcibauuz",
+          "comment": "Semitransparent text box",
+          "type": "component",
+          "component": "basic/100",
+          "settings": {
+            "box": {
+              "background": "rgba(0,0,0,0.4)",
+              "box-shadow": "none",
+              "final_width": "100%",
+              "duration": "1000",
+              "initial_width": "0%",
+              "easing": "easeOutExpo"
+            }
+          },
+          "x": 0,
+          "y": 0,
+          "width": 678,
+          "height": 1080,
+          "start": 0.5
+        },
+        {
+          "id": "qkl8cc72",
+          "comment": "Logo",
+          "type": "image",
+          "src": "{{logoURL}}",
+          "x": 1777,
+          "y": 25,
+          "position": "custom",
+          "width": 128,
+          "height": -1,
+          "start": 0
+        },
+        {
+          "id": "qbsqzl6t",
+          "comment": "Icon",
+          "type": "image",
+          "src": "{{iconURL}}",
+          "x": 254,
+          "y": 108,
+          "position": "custom",
+          "width": 128,
+          "height": -1,
+          "start": 1
+        },
+        {
+          "id": "qgzi776x",
+          "comment": "Property details",
+          "type": "component",
+          "component": "basic/000",
+          "settings": {
+            "headline": {
+              "text": [
+                "{{textboxTitle}}"
+              ],
+              "color": "white",
+              "font-size": "70px"
+            },
+            "body": {
+              "text": [
+                "{{textboxLine1}}",
+                "{{textboxLine2}}",
+                "{{textboxLine3}}",
+                "{{textboxLine4}}"
+              ],
+              "color": "white",
+              "font-size": "55px",
+              "line-height": "35px"
+            }
+          },
+          "width": 600,
+          "height": 760,
+          "x": 40,
+          "y": 280,
+          "start": 1
+        },
+        {
+          "id": "qfbdw8dh",
+          "comment": "Price tag",
+          "type": "component",
+          "component": "basic/052",
+          "settings": {
+            "headline": {
+              "text": "{{price}}",
+              "font-size": "50px"
+            },
+            "card": {
+              "vertical-position": "top",
+              "horizontal-position": "center",
+              "vertical-align": "center",
+              "horizontal-align": "right"
+            },
+            "section": {
+              "text": [
+                ""
+              ],
+              "background-color": "{{primaryColor}}",
+              "color": "black"
+            }
+          },
+          "cache": false,
+          "x": 60,
+          "y": 810,
+          "width": 600,
+          "height": 250,
+          "start": 1.5
+        }
+      ],
+      "duration": 8,
+      "transition": {
+        "style": "hrslice",
+        "duration": 1.5
+      }
+    },
+    {
+      "id": "qwh60g1l",
+      "comment": "Outro scene",
+      "elements": [
+        {
+          "id": "q5wlwjbx2",
+          "comment": "Realtor contact details",
+          "type": "component",
+          "component": "basic/001",
+          "settings": {
+            "bar": {
+              "background": "{{primaryColor}}"
+            },
+            "headline": {
+              "text": [
+                "{{realtorName}}"
+              ],
+              "color": "white"
+            },
+            "body": {
+              "text": [
+                "{{realtorTitle}}",
+                "&nbsp;",
+                "{{realtorEmailAddress}}",
+                "{{realtorPhoneNumber}}"
+              ],
+              "color": "white",
+              "font-size": "40px",
+              "font-weight": "400"
+            }
+          },
+          "width": 1600,
+          "height": 760,
+          "x": 641,
+          "y": 596,
+          "duration": 10,
+          "position": "custom",
+          "start": 3
+        }
+      ],
+      "duration": 10,
+      "transition": {
+        "style": "slideright",
+        "duration": 1.5
+      }
+    }
+  ],
+  "elements": [
+    {
+      "id": "q8hx1wo4",
+      "type": "audio",
+      "src": "{{musicURL}}",
+      "volume": "{{musicVolume}}",
+      "duration": -2,
+      "fade-out": 2
+    },
+    {
+      "id": "qd3dtxa4",
+      "condition": "{{voiceModel!='none'}}",
+      "type": "voice",
+      "model": "{{voiceModel}}",
+      "voice": "{{voiceID}}",
+      "text": "{{voiceoverText}}",
+      "start": 6
+    }
+  ],
+  "resolution": "custom",
+  "fps": 25,
+  "settings": {},
+  "cache": true
+}

@@ -1,0 +1,73 @@
+{
+  "id": "qqzav2ec",
+  "comment": "Default movie",
+  "width": 1080,
+  "height": 1920,
+  "quality": "medium",
+  "draft": false,
+  "scenes": [
+    {
+      "id": "q6adc7ac",
+      "comment": "Scene 1",
+      "elements": [
+        {
+          "id": "qs6yd9by",
+          "type": "image",
+          "src": "https://assets.json2video.com/assets/images/licoln.jpg",
+          "scale": {
+            "width": 2942,
+            "height": 1920
+          },
+          "x": 0,
+          "y": 0,
+          "position": "center-center",
+          "zoom": 5
+        },
+        {
+          "id": "q6kbimx5",
+          "type": "component",
+          "component": "basic/000",
+          "settings": {
+            "headline": {
+              "text": [
+                "You cannot escape the responsibility of tomorrow by evading it today"
+              ],
+              "color": "white",
+              "font-family": "EB Garamond",
+              "text-align": "center",
+              "font-size": "8vw",
+              "padding": "3vw 0"
+            },
+            "body": {
+              "color": "white",
+              "text": [
+                "Abraham Lincoln"
+              ],
+              "text-align": "center",
+              "font-family": "EB Garamond",
+              "font-size": "5vw"
+            },
+            "card": {
+              "vertical-align": "bottom",
+              "margin": "5vw",
+              "background-color": "rgba(0,0,0,0.5)",
+              "border-radius": "2vw"
+            }
+          },
+          "width": 1080,
+          "height": 1800,
+          "x": 0,
+          "y": 0,
+          "duration": 10,
+          "comment": "Simple card",
+          "position": "custom"
+        }
+      ]
+    }
+  ],
+  "elements": [],
+  "resolution": "instagram-story",
+  "fps": 25,
+  "settings": {},
+  "cache": true
+}
