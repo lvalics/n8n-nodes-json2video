@@ -13,8 +13,7 @@ import {
 import {
   loadTemplate,
   getTemplateCategories,
-  getTemplatesForCategory,
-  applyTemplateCustomizations
+  getTemplatesForCategory
 } from './templateLoader';
 
 export class JSON2Video implements INodeType {
@@ -633,102 +632,21 @@ export class JSON2Video implements INodeType {
 					},
 				},
 			},
-			// Template customization fields
+			// Template JSON editor
 			{
-				displayName: 'Customize Template',
-				name: 'customizeTemplate',
-				type: 'boolean',
-				default: false,
-				description: 'Whether to customize the template content',
+				displayName: 'Template JSON',
+				name: 'templateJson',
+				type: 'json',
+				typeOptions: {
+					rows: 12,
+				},
+				default: '{}',
+				description: 'The loaded template JSON that can be modified directly',
 				displayOptions: {
 					show: {
 						operation: ['createMovieFromTemplate'],
 					},
 				},
-			},
-			// Text customization collection
-			{
-				displayName: 'Text Customization',
-				name: 'textCustomization',
-				type: 'collection',
-				placeholder: 'Add Text Customization',
-				default: {},
-				displayOptions: {
-					show: {
-						operation: ['createMovieFromTemplate'],
-						customizeTemplate: [true],
-					},
-				},
-				options: [
-					{
-						displayName: 'Main Title',
-						name: 'mainTitle',
-						type: 'string',
-						default: '',
-						description: 'Main title text to replace in the template',
-					},
-					{
-						displayName: 'Subtitle',
-						name: 'subtitle',
-						type: 'string',
-						default: '',
-						description: 'Subtitle text to replace in the template',
-					},
-					{
-						displayName: 'Body Text',
-						name: 'bodyText',
-						type: 'string',
-						typeOptions: {
-							rows: 4,
-						},
-						default: '',
-						description: 'Body text to replace in the template',
-					},
-				],
-			},
-			// Media customization collection
-			{
-				displayName: 'Media Customization',
-				name: 'mediaCustomization',
-				type: 'collection',
-				placeholder: 'Add Media Customization',
-				default: {},
-				displayOptions: {
-					show: {
-						operation: ['createMovieFromTemplate'],
-						customizeTemplate: [true],
-					},
-				},
-				options: [
-					{
-						displayName: 'Main Image URL',
-						name: 'mainImageUrl',
-						type: 'string',
-						default: '',
-						description: 'URL of main image to replace in the template',
-					},
-					{
-						displayName: 'Background Video URL',
-						name: 'backgroundVideoUrl',
-						type: 'string',
-						default: '',
-						description: 'URL of background video to replace in the template',
-					},
-					{
-						displayName: 'Logo URL',
-						name: 'logoUrl',
-						type: 'string',
-						default: '',
-						description: 'URL of logo to replace in the template',
-					},
-					{
-						displayName: 'Background Color',
-						name: 'backgroundColor',
-						type: 'color',
-						default: '',
-						description: 'Background color to replace in the template',
-					},
-				],
 			},
 		],
 	};
@@ -986,17 +904,7 @@ export class JSON2Video implements INodeType {
 						}
 					}
 
-					// Check if template customization is enabled
-					const customizeTemplate = this.getNodeParameter('customizeTemplate', i, false) as boolean;
-					
-					if (customizeTemplate) {
-						// Get customization parameters
-						const textCustomization = this.getNodeParameter('textCustomization', i, {}) as IDataObject;
-						const mediaCustomization = this.getNodeParameter('mediaCustomization', i, {}) as IDataObject;
-						
-						// Apply customizations to the template
-						applyTemplateCustomizations(movieData, textCustomization, mediaCustomization);
-					}
+					// Template is now customized directly via the JSON editor
 
 					// Make the API request to create the movie
 					const response = await this.helpers.request({
@@ -1042,13 +950,21 @@ export class JSON2Video implements INodeType {
 					let templateData: IDataObject;
 					try {
 						templateData = loadTemplate(templateCategory, templateName);
-						console.log(`Template ${templateCategory}/${templateName} loaded successfully`);
+						// Note: We can't set the node parameter programmatically
 					} catch (error) {
 						throw new Error(`Failed to load template "${templateName}" from category "${templateCategory}": ${error.message}`);
 					}
 					
-					if (!templateData || Object.keys(templateData).length === 0) {
-						throw new Error(`Template "${templateName}" from category "${templateCategory}" is empty or invalid.`);
+					// Check if the user has modified the template JSON
+					const userTemplateJson = this.getNodeParameter('templateJson', i) as string;
+					
+					// Use the user-modified JSON if it's valid
+					if (userTemplateJson && userTemplateJson !== '{}') {
+						try {
+							templateData = JSON.parse(userTemplateJson);
+						} catch (error) {
+							throw new Error(`Invalid JSON in template: ${error.message}`);
+						}
 					}
 
 					// Add movie configuration
