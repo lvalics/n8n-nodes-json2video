@@ -33,7 +33,7 @@
     "lintfix": "echo 'Linting disabled temporarily'",
     "prepublishOnly": "npm run build",
     "runn8n": "npx nodemon -q -e js,ts,yml,yaml,json,node,graphql,env,env.sample --exec n8n start",
-    "copy-templates": "cp -r templates dist/"
+    "copy-templates": "cp -r templates dist/ && echo 'Templates copied to dist/templates'"
   },
   "files": [
     "dist",

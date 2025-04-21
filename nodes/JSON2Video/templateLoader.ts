@@ -67,37 +67,85 @@ export function getTemplatesForCategory(category: string): Array<{name: string, 
  */
 export function loadTemplate(category: string, name: string): IDataObject {
   try {
-    // Build the template path for local development - now looking at root templates folder
-    const templatePath = path.join(__dirname, '..', '..', 'templates', category, `${name}.json`);
-    console.log(`Attempting to load template from: ${templatePath}`);
+    console.log(`Attempting to load template: ${category}/${name}`);
     
+    // Try multiple paths to locate the template
+    const possiblePaths = [
+      // Path 1: Development path relative to the current file
+      path.join(__dirname, '..', '..', 'templates', category, `${name}.json`),
+      
+      // Path 2: Production path if templateLoader is in dist/nodes/JSON2Video
+      path.join(__dirname, '..', '..', '..', 'templates', category, `${name}.json`),
+      
+      // Path 3: Path relative to dist folder
+      path.join(process.cwd(), 'dist', 'templates', category, `${name}.json`),
+      
+      // Path 4: Path relative to project root
+      path.join(process.cwd(), 'templates', category, `${name}.json`),
+    ];
+    
+    // Log all the paths we're going to try
+    console.log('Attempting to load template from these paths:');
+    possiblePaths.forEach(p => console.log(`- ${p}`));
+
+    // Try each path in filesystem first
+    let templateData = null;
     let loadedFrom = '';
-    let templateData;
     
-    // First try loading from filesystem (development mode)
-    if (fs.existsSync(templatePath)) {
-      console.log(`Template file found at: ${templatePath}`);
-      const templateContent = fs.readFileSync(templatePath, 'utf8');
-      templateData = JSON.parse(templateContent);
-      loadedFrom = `Loaded from filesystem: ${templatePath}`;
-    } else {
-      // For production - load from embedded module using the root path
-      console.log(`Template file not found in filesystem, trying require: ../../templates/${category}/${name}.json`);
-      try {
-        templateData = require(`../../templates/${category}/${name}.json`);
-        loadedFrom = `Loaded using require from: ../../templates/${category}/${name}.json`;
-      } catch (requireError) {
-        // Fallback to the old path structure in case templates haven't been moved yet
-        console.log(`Failed to load from new path, trying legacy path: ./templates/${category}/${name}.json`);
-        templateData = require(`./templates/${category as TemplateCategory}/${name}.json`);
-        loadedFrom = `Loaded using require from: ./templates/${category}/${name}.json (legacy path)`;
+    for (const attemptPath of possiblePaths) {
+      if (fs.existsSync(attemptPath)) {
+        console.log(`Template file found at: ${attemptPath}`);
+        const templateContent = fs.readFileSync(attemptPath, 'utf8');
+        templateData = JSON.parse(templateContent);
+        loadedFrom = `Loaded from filesystem: ${attemptPath}`;
+        break;
       }
+    }
+    
+    // If file not found in filesystem, try with require
+    if (!templateData) {
+      console.log('File not found in filesystem, trying with require...');
+      try {
+        // Try to require from root templates
+        templateData = require(`../../../templates/${category}/${name}.json`);
+        loadedFrom = `Loaded using require from root templates`;
+      } catch (error1) {
+        try {
+          // Try from current directory templates
+          templateData = require(`../../templates/${category}/${name}.json`);
+          loadedFrom = `Loaded using require from templates directory`;
+        } catch (error2) {
+          try {
+            // Try from legacy path
+            templateData = require(`./templates/${category}/${name}.json`);
+            loadedFrom = `Loaded using require from legacy path`;
+          } catch (error3) {
+            // Last resort - try loading from dist/templates
+            try {
+              templateData = require(`../../dist/templates/${category}/${name}.json`);
+              loadedFrom = `Loaded using require from dist/templates`;
+            } catch (error4) {
+              console.error('All require attempts failed:');
+              console.error('- Error from root templates:', error1.message);
+              console.error('- Error from templates directory:', error2.message);
+              console.error('- Error from legacy path:', error3.message);
+              console.error('- Error from dist templates:', error4.message);
+              throw new Error(`Unable to load template from any path`);
+            }
+          }
+        }
+      }
+    }
+    
+    if (!templateData) {
+      throw new Error(`Failed to load template from any location`);
     }
     
     // Add debug info to the returned object
     templateData._debug = {
       loadedFrom,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+      paths: possiblePaths
     };
     
     console.log(`Successfully loaded template with keys: ${Object.keys(templateData).join(', ')}`);
