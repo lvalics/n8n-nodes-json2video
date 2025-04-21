@@ -26,16 +26,18 @@
   "main": "index.js",
   "scripts": {
     "clean": "rm -rf dist",
-    "build": "npm run clean && tsc && gulp build:icons",
+    "build": "npm run clean && tsc && gulp build:icons && npm run copy-templates",
     "dev": "tsc --watch",
     "format": "prettier nodes credentials --write",
     "lint": "echo 'Linting disabled temporarily'",
     "lintfix": "echo 'Linting disabled temporarily'",
     "prepublishOnly": "npm run build",
-    "runn8n": "npx nodemon -q -e js,ts,yml,yaml,json,node,graphql,env,env.sample --exec n8n start"
+    "runn8n": "npx nodemon -q -e js,ts,yml,yaml,json,node,graphql,env,env.sample --exec n8n start",
+    "copy-templates": "cp -r templates dist/"
   },
   "files": [
-    "dist"
+    "dist",
+    "templates"
   ],
   "n8n": {
     "n8nNodesApiVersion": 1,

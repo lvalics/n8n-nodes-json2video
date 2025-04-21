@@ -67,8 +67,8 @@ export function getTemplatesForCategory(category: string): Array<{name: string, 
  */
 export function loadTemplate(category: string, name: string): IDataObject {
   try {
-    // Build the template path for local development
-    const templatePath = path.join(__dirname, 'templates', category, `${name}.json`);
+    // Build the template path for local development - now looking at root templates folder
+    const templatePath = path.join(__dirname, '..', '..', 'templates', category, `${name}.json`);
     console.log(`Attempting to load template from: ${templatePath}`);
     
     let loadedFrom = '';
@@ -81,10 +81,17 @@ export function loadTemplate(category: string, name: string): IDataObject {
       templateData = JSON.parse(templateContent);
       loadedFrom = `Loaded from filesystem: ${templatePath}`;
     } else {
-      // For production - load from embedded module
-      console.log(`Template file not found in filesystem, trying require: ./templates/${category}/${name}.json`);
-      templateData = require(`./templates/${category as TemplateCategory}/${name}.json`);
-      loadedFrom = `Loaded using require from: ./templates/${category}/${name}.json`;
+      // For production - load from embedded module using the root path
+      console.log(`Template file not found in filesystem, trying require: ../../templates/${category}/${name}.json`);
+      try {
+        templateData = require(`../../templates/${category}/${name}.json`);
+        loadedFrom = `Loaded using require from: ../../templates/${category}/${name}.json`;
+      } catch (requireError) {
+        // Fallback to the old path structure in case templates haven't been moved yet
+        console.log(`Failed to load from new path, trying legacy path: ./templates/${category}/${name}.json`);
+        templateData = require(`./templates/${category as TemplateCategory}/${name}.json`);
+        loadedFrom = `Loaded using require from: ./templates/${category}/${name}.json (legacy path)`;
+      }
     }
     
     // Add debug info to the returned object

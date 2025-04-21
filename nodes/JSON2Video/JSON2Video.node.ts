@@ -632,6 +632,38 @@ export class JSON2Video implements INodeType {
 					},
 				},
 			},
+			{
+				displayName: 'Template Content',
+				name: 'templateContent',
+				type: 'json',
+				typeOptions: {
+					rows: 12,
+					alwaysOpenEditWindow: true,
+				},
+				default: '{}',
+				displayOptions: {
+					show: {
+						operation: ['createMovieFromTemplate'],
+					},
+				},
+				description: 'The content of the selected template (read-only, updates when template is loaded)',
+				noDataExpression: true,
+			},
+			{
+				displayName: 'Load Template',
+				name: 'loadTemplate',
+				type: 'button',
+				typeOptions: {
+					loadOptionsMethod: 'getTemplateContent',
+				},
+				displayOptions: {
+					show: {
+						operation: ['createMovieFromTemplate'],
+					},
+				},
+				description: 'Click to load the content of the selected template',
+				default: '', // Required for button type
+			},
 		],
 	};
 
@@ -648,8 +680,41 @@ export class JSON2Video implements INodeType {
 				}
 				return getTemplatesForCategory(templateCategory);
 			},
+			async getTemplateContent(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
+				const templateCategory = this.getCurrentNodeParameter('templateCategory') as string;
+				const templateName = this.getCurrentNodeParameter('templateName') as string;
+				
+				if (!templateCategory || !templateName) {
+					return [];
+				}
+				
+				try {
+					const templateData = loadTemplate(templateCategory, templateName);
+					// Remove debug info if present
+					if (templateData._debug) {
+						delete templateData._debug;
+					}
+			
+					// Instead of setting parameter directly, return the content as an option
+					// that n8n will use to display the template
+					return [{
+						name: 'Template Loaded Successfully',
+						value: JSON.stringify(templateData, null, 2),
+						description: `Loaded template from ${templateCategory}/${templateName}`,
+					}];
+				} catch (error) {
+					console.error('Error loading template content:', error);
+					
+					// Return error message as an option
+					const errorMessage = { error: `Failed to load template: ${error.message}` };
+					return [{
+						name: 'Error Loading Template',
+						value: JSON.stringify(errorMessage, null, 2),
+						description: error.message,
+					}];
+				}
+			},
 		},
-		
 	};
 
 	// This is the function that will be called by n8n when the node is executed
