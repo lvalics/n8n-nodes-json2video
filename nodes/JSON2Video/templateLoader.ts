@@ -141,14 +141,10 @@ export function loadTemplate(category: string, name: string): IDataObject {
       throw new Error(`Failed to load template from any location`);
     }
     
-    // Add debug info to the returned object
-    templateData._debug = {
-      loadedFrom,
-      timestamp: new Date().toISOString(),
-      paths: possiblePaths
-    };
-    
-    console.log(`Successfully loaded template with keys: ${Object.keys(templateData).join(', ')}`);
+    // Log debug info instead of adding it to the returned object
+    console.log(`Successfully loaded template from: ${loadedFrom}`);
+    console.log(`Template loaded at: ${new Date().toISOString()}`);
+    console.log(`Template contains keys: ${Object.keys(templateData).join(', ')}`);
     return templateData;
   } catch (error) {
     console.error(`Failed to load template ${category}/${name}:`, error);

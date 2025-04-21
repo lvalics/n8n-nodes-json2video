@@ -16,6 +16,8 @@ import {
   getTemplatesForCategory
 } from './templateLoader';
 
+// The JSON2Video node handles video creation operations
+
 export class JSON2Video implements INodeType {
 	// Static template options are used instead of dynamic loading
 	description: INodeTypeDescription = {
@@ -61,6 +63,12 @@ export class JSON2Video implements INodeType {
 						value: 'createMovieFromTemplate',
 						description: 'Create a movie using a predefined template',
 						action: 'Create a movie using a predefined template',
+					},
+					{
+						name: 'Upload File',
+						value: 'uploadFile',
+						description: 'Upload a file to be used in videos',
+						action: 'Upload a file to be used in videos',
 					},
 				],
 				default: 'createMovie',
@@ -664,6 +672,166 @@ export class JSON2Video implements INodeType {
 				description: 'Click to load the content of the selected template',
 				default: '', // Required for button type
 			},
+			{
+				displayName: 'Template Variables',
+				name: 'templateVariables',
+				type: 'fixedCollection',
+				typeOptions: {
+					multipleValues: true,
+				},
+				default: {},
+				description: 'Define variables to customize the template. Use these to inject dynamic content into templates without editing JSON.',
+				displayOptions: {
+					show: {
+						operation: ['createMovieFromTemplate'],
+					},
+				},
+				options: [
+					{
+						name: 'variables',
+						displayName: 'Variables',
+						values: [
+							{
+								displayName: 'Name',
+								name: 'name',
+								type: 'string',
+								default: '',
+								description: 'Name of the variable (without {{ }} brackets)',
+								placeholder: 'title',
+							},
+							{
+								displayName: 'Value',
+								name: 'value',
+								type: 'string',
+								default: '',
+								description: 'Value of the variable',
+								placeholder: 'My Awesome Video',
+							}
+						],
+					},
+				],
+			},
+			// File Upload properties
+			{
+				displayName: 'Input Method',
+				name: 'inputMethod',
+				type: 'options',
+				options: [
+					{
+						name: 'Binary Data (Previous Node Output)',
+						value: 'binaryFile',
+						description: 'Use binary data from previous node output',
+					},
+					{
+						name: 'URL (Remote File)',
+						value: 'url',
+						description: 'Download and upload a file from a URL',
+					},
+					{
+						name: 'Base64 Data (Manual Input)',
+						value: 'base64',
+						description: 'Provide base64 encoded file data directly',
+					},
+				],
+				default: 'binaryFile',
+				description: 'Method to provide the file for upload',
+				displayOptions: {
+					show: {
+						operation: ['uploadFile'],
+					},
+				},
+			},
+			{
+				displayName: 'Binary Property',
+				name: 'binaryPropertyName',
+				type: 'string',
+				default: 'data',
+				required: true,
+				displayOptions: {
+					show: {
+						operation: ['uploadFile'],
+						inputMethod: ['binaryFile'],
+					},
+				},
+				description: 'The binary property containing the file to upload',
+			},
+			{
+				displayName: 'File Name',
+				name: 'fileName',
+				type: 'string',
+				default: '',
+				required: true,
+				displayOptions: {
+					show: {
+						operation: ['uploadFile'],
+						inputMethod: ['base64'],
+					},
+				},
+				description: 'Name of the file with extension (jpg, jpeg, png, webp, mp4, wav, mp3)',
+			},
+			{
+				displayName: 'File Data',
+				name: 'fileData',
+				type: 'string',
+				typeOptions: {
+					rows: 4,
+				},
+				default: '',
+				required: true,
+				displayOptions: {
+					show: {
+						operation: ['uploadFile'],
+						inputMethod: ['base64'],
+					},
+				},
+				description: 'Base64 encoded file data',
+			},
+			{
+				displayName: 'File URL',
+				name: 'fileUrl',
+				type: 'string',
+				default: '',
+				required: true,
+				displayOptions: {
+					show: {
+						operation: ['uploadFile'],
+						inputMethod: ['url'],
+					},
+				},
+				placeholder: 'https://example.com/image.jpg',
+				description: 'URL of the file to download and upload to JSON2Video (must be publicly accessible)',
+			},
+			{
+				displayName: 'File Type',
+				name: 'fileType',
+				type: 'options',
+				options: [
+					{
+						name: 'Image',
+						value: 'image',
+						description: 'Upload an image file (JPG, PNG, WEBP)',
+					},
+					{
+						name: 'Video',
+						value: 'video',
+						description: 'Upload a video file (MP4)',
+					},
+					{
+						name: 'Audio',
+						value: 'audio',
+						description: 'Upload an audio file (MP3, WAV)',
+					},
+				],
+				default: 'image',
+				description: 'Type of file being uploaded',
+				required: true,
+				displayOptions: {
+					show: {
+						operation: ['uploadFile'],
+					},
+				},
+			},
+			// End of properties
 		],
 	};
 
@@ -683,18 +851,18 @@ export class JSON2Video implements INodeType {
 			async getTemplateContent(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
 				const templateCategory = this.getCurrentNodeParameter('templateCategory') as string;
 				const templateName = this.getCurrentNodeParameter('templateName') as string;
-				
+
 				if (!templateCategory || !templateName) {
 					return [];
 				}
-				
+
 				try {
 					const templateData = loadTemplate(templateCategory, templateName);
 					// Remove debug info if present
 					if (templateData._debug) {
 						delete templateData._debug;
 					}
-			
+
 					// Instead of setting parameter directly, return the content as an option
 					// that n8n will use to display the template
 					return [{
@@ -704,7 +872,7 @@ export class JSON2Video implements INodeType {
 					}];
 				} catch (error) {
 					console.error('Error loading template content:', error);
-					
+
 					// Return error message as an option
 					const errorMessage = { error: `Failed to load template: ${error.message}` };
 					return [{
@@ -991,21 +1159,21 @@ export class JSON2Video implements INodeType {
 					// Get template category and name
 					const templateCategory = this.getNodeParameter('templateCategory', i) as string;
 					const templateName = this.getNodeParameter('templateName', i) as string;
-					
+
 					if (!templateCategory || !templateName) {
 						throw new Error('Both template category and template name must be selected');
 					}
-					
+
 					// Load the template using the category and template name
 					let templateData: IDataObject;
 					try {
 						templateData = loadTemplate(templateCategory, templateName);
-						
+
 						// Extract any debug info before using the template
 						const debugInfo = templateData._debug as IDataObject | undefined;
 						if (debugInfo) {
 							console.log('Template debug info:', debugInfo);
-							
+
 							// Set debug info for the UI - create a detailed message for logging
 							const debugInfoString = `Loading from: ${templateCategory}/${templateName}\n${
 								typeof debugInfo.loadedFrom === 'string' ? debugInfo.loadedFrom : 'unknown source'
@@ -1013,7 +1181,7 @@ export class JSON2Video implements INodeType {
 								typeof debugInfo.timestamp === 'string' ? debugInfo.timestamp : new Date().toISOString()
 							}`;
 							console.log(debugInfoString);
-							
+
 							// Store this information in the returnData for this execution
 							// This way it will appear in the execution output
 							returnData.push({
@@ -1022,7 +1190,7 @@ export class JSON2Video implements INodeType {
 								loadedAt: typeof debugInfo.timestamp === 'string' ? debugInfo.timestamp : new Date().toISOString(),
 								note: "To load the template JSON, execute the node once after selecting a template."
 							});
-							
+
 							// Remove debug info from actual template data
 							delete templateData._debug;
 						}
@@ -1092,6 +1260,29 @@ export class JSON2Video implements INodeType {
 						}
 					}
 
+					// Extract variables from the parameters
+					const templateVariablesCollection = this.getNodeParameter('templateVariables.variables', i, []) as IDataObject[];
+					const variables: IDataObject = {};
+
+					// Convert the array of variable objects to a single variables object
+					if (templateVariablesCollection.length > 0) {
+						console.log('Processing template variables:', templateVariablesCollection);
+
+						templateVariablesCollection.forEach((variable: IDataObject) => {
+							if (variable.name && variable.value !== undefined) {
+								variables[variable.name as string] = variable.value;
+							}
+						});
+
+						console.log('Final variables object:', variables);
+					}
+
+					// Add variables to the template data
+					if (Object.keys(variables).length > 0) {
+						movieData.variables = variables;
+						console.log('Added variables to movie data:', movieData.variables);
+					}
+
 					// Make the API request to create the movie
 					const response = await this.helpers.request({
 						method: 'POST',
@@ -1105,6 +1296,170 @@ export class JSON2Video implements INodeType {
 					});
 
 					returnData.push(response);
+				} else if (operation === 'uploadFile') {
+					// Get input method and file type
+					const inputMethod = this.getNodeParameter('inputMethod', i) as string;
+					const fileType = this.getNodeParameter('fileType', i) as string;
+
+					// Helper functions for file handling
+					const generateHashFilename = (extension: string): string => {
+						// Generate a random hash for filename
+						const randomHash = Math.random().toString(36).substring(2, 15) +
+										Math.random().toString(36).substring(2, 15);
+						return `${randomHash}.${extension}`;
+					};
+
+					const getMimeTypeExtension = (mimeType: string): string => {
+						// Map MIME types to file extensions
+						const mimeTypeToExtension: {[key: string]: string} = {
+							'image/jpeg': 'jpg',
+							'image/png': 'png',
+							'image/webp': 'webp',
+							'video/mp4': 'mp4',
+							'audio/wav': 'wav',
+							'audio/mpeg': 'mp3',
+						};
+
+						return mimeTypeToExtension[mimeType] || 'jpg';
+					};
+
+					// Initialize variables with default values to prevent undefined access errors
+					let fileName = '';
+					let fileData = '';
+					let extension = '';
+
+					// Handle different input methods
+					if (inputMethod === 'binaryFile') {
+						// Handle binary input
+						const binaryPropertyName = this.getNodeParameter('binaryPropertyName', i) as string;
+
+						if (items[i].binary === undefined) {
+							throw new Error('No binary data exists on item!');
+						}
+
+						const binaryData = items[i].binary![binaryPropertyName as string];
+
+						if (binaryData === undefined) {
+							throw new Error(`No binary data found for field "${binaryPropertyName}"!`);
+						}
+
+						// Get extension from filename or mime type
+						if (binaryData.fileName) {
+							extension = binaryData.fileName.split('.').pop()?.toLowerCase() ||
+									getMimeTypeExtension(binaryData.mimeType);
+						} else {
+							extension = getMimeTypeExtension(binaryData.mimeType);
+						}
+
+						// Generate hash-based filename
+						fileName = generateHashFilename(extension);
+
+						// Get base64 data
+						fileData = binaryData.data;
+					} else if (inputMethod === 'url') {
+						// Handle URL input
+						const fileUrl = this.getNodeParameter('fileUrl', i) as string;
+
+						if (!fileUrl) {
+							throw new Error('File URL is required');
+						}
+
+						try {
+							// Get extension from URL
+							extension = fileUrl.split('.').pop()?.toLowerCase() || 'jpg';
+							if (extension.includes('?')) {
+								extension = extension.split('?')[0];
+							}
+
+							// Generate hash-based filename
+							fileName = generateHashFilename(extension);
+
+							// Download the file from the URL
+							const response = await this.helpers.request({
+								method: 'GET',
+								url: fileUrl,
+								encoding: null,
+								resolveWithFullResponse: true,
+							});
+
+							// If we have content-type, use it to get a better extension
+							if (response.headers['content-type']) {
+								const contentTypeExt = getMimeTypeExtension(response.headers['content-type']);
+								if (contentTypeExt) {
+									extension = contentTypeExt;
+									fileName = generateHashFilename(contentTypeExt);
+								}
+							}
+
+							// Convert to base64
+							const buffer = Buffer.from(response.body as Buffer);
+							fileData = buffer.toString('base64');
+						} catch (error) {
+							throw new Error(`Failed to download file from URL: ${error.message}`);
+						}
+					} else if (inputMethod === 'base64') {
+						// Manual input
+						fileName = this.getNodeParameter('fileName', i) as string;
+						fileData = this.getNodeParameter('fileData', i) as string;
+
+						// Get extension from filename
+						extension = fileName.split('.').pop()?.toLowerCase() || '';
+					}
+
+					// Define supported extensions by file type with proper typing
+					const supportedExtensions: Record<string, string[]> = {
+						image: ['jpg', 'jpeg', 'png', 'webp'],
+						video: ['mp4', 'mov', 'webm'],
+						audio: ['mp3', 'wav', 'ogg']
+					};
+
+					// Check if file extension is supported for the selected file type
+					if (!extension || !supportedExtensions[fileType]?.includes(extension)) {
+						throw new Error(
+							`File extension "${extension}" is not supported for file type "${fileType}". ` +
+							`Supported extensions for ${fileType}: ${supportedExtensions[fileType]?.join(', ') || 'none'}`
+						);
+					}
+
+					try {
+						// Create the body object explicitly to avoid using 'type' variable name directly
+						const requestBody: IDataObject = {};
+						requestBody.file_name = fileName;
+						requestBody.file_data = fileData;
+						// Use computed property to avoid the 'type' variable name directly (TypeScript conflict)
+						requestBody['type'] = fileType;
+
+						// Make API request to JSON2Video - using the correct endpoint format for the assets API
+						const response = await this.helpers.request({
+							method: 'POST',
+							url: `${baseUrl}/assets`,  // Using the assets endpoint which is the correct upload path
+							headers: {
+								'Content-Type': 'application/json',
+								'x-api-key': credentials.apiKey as string,
+							},
+							body: requestBody,
+							json: true,
+						});
+
+						// Success
+						console.log('Upload response:', response);
+						returnData.push({
+							success: true,
+							fileName,
+							fileType,
+							fileExtension: extension,
+							uploadMethod: inputMethod,
+							uploadTimestamp: new Date().toISOString(),
+							...response,
+						});
+					} catch (error) {
+						// Detailed error logging
+						console.error('Upload request failed:', error.message);
+						console.error('Response status:', error.response?.status);
+						console.error('Response body:', error.response?.body);
+						throw error;
+					}
+				// End of operation cases
 				}
 			} catch (error) {
 				// Handle errors according to n8n conventions
