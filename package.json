@@ -43,7 +43,7 @@
       "dist/credentials/Json2VideoApi.credentials.js"
     ],
     "nodes": [
-      "dist/nodes/ExampleNode/ExampleNode.node.js"
+      "dist/nodes/JSON2Video/JSON2Video.node.js"
     ]
   },
   "devDependencies": {
