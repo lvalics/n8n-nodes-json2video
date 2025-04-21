@@ -632,22 +632,6 @@ export class JSON2Video implements INodeType {
 					},
 				},
 			},
-			// Template JSON editor
-			{
-				displayName: 'Template JSON',
-				name: 'templateJson',
-				type: 'json',
-				typeOptions: {
-					rows: 12,
-				},
-				default: '{}',
-				description: 'The loaded template JSON that can be modified directly',
-				displayOptions: {
-					show: {
-						operation: ['createMovieFromTemplate'],
-					},
-				},
-			},
 		],
 	};
 
@@ -665,6 +649,7 @@ export class JSON2Video implements INodeType {
 				return getTemplatesForCategory(templateCategory);
 			},
 		},
+		
 	};
 
 	// This is the function that will be called by n8n when the node is executed
@@ -950,21 +935,38 @@ export class JSON2Video implements INodeType {
 					let templateData: IDataObject;
 					try {
 						templateData = loadTemplate(templateCategory, templateName);
-						// Note: We can't set the node parameter programmatically
-					} catch (error) {
-						throw new Error(`Failed to load template "${templateName}" from category "${templateCategory}": ${error.message}`);
-					}
-					
-					// Check if the user has modified the template JSON
-					const userTemplateJson = this.getNodeParameter('templateJson', i) as string;
-					
-					// Use the user-modified JSON if it's valid
-					if (userTemplateJson && userTemplateJson !== '{}') {
-						try {
-							templateData = JSON.parse(userTemplateJson);
-						} catch (error) {
-							throw new Error(`Invalid JSON in template: ${error.message}`);
+						
+						// Extract any debug info before using the template
+						const debugInfo = templateData._debug as IDataObject | undefined;
+						if (debugInfo) {
+							console.log('Template debug info:', debugInfo);
+							
+							// Set debug info for the UI - create a detailed message for logging
+							const debugInfoString = `Loading from: ${templateCategory}/${templateName}\n${
+								typeof debugInfo.loadedFrom === 'string' ? debugInfo.loadedFrom : 'unknown source'
+							}\nTimestamp: ${
+								typeof debugInfo.timestamp === 'string' ? debugInfo.timestamp : new Date().toISOString()
+							}`;
+							console.log(debugInfoString);
+							
+							// Store this information in the returnData for this execution
+							// This way it will appear in the execution output
+							returnData.push({
+								templatePath: typeof debugInfo.loadedFrom === 'string' ? debugInfo.loadedFrom : 'unknown source',
+								templateName: `${templateCategory}/${templateName}`,
+								loadedAt: typeof debugInfo.timestamp === 'string' ? debugInfo.timestamp : new Date().toISOString(),
+								note: "To load the template JSON, execute the node once after selecting a template."
+							});
+							
+							// Remove debug info from actual template data
+							delete templateData._debug;
 						}
+
+						console.log(`Loaded template: ${templateCategory}/${templateName}`);
+						// templateData is already set from loadTemplate above
+					} catch (error) {
+						console.error('Error loading template:', error);
+						throw new Error(`Failed to load template "${templateName}" from category "${templateCategory}": ${error.message}`);
 					}
 
 					// Add movie configuration

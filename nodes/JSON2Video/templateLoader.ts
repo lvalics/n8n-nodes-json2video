@@ -67,18 +67,36 @@ export function getTemplatesForCategory(category: string): Array<{name: string, 
  */
 export function loadTemplate(category: string, name: string): IDataObject {
   try {
-    // For local development - try to read from the filesystem first
+    // Build the template path for local development
     const templatePath = path.join(__dirname, 'templates', category, `${name}.json`);
+    console.log(`Attempting to load template from: ${templatePath}`);
     
+    let loadedFrom = '';
+    let templateData;
+    
+    // First try loading from filesystem (development mode)
     if (fs.existsSync(templatePath)) {
+      console.log(`Template file found at: ${templatePath}`);
       const templateContent = fs.readFileSync(templatePath, 'utf8');
-      return JSON.parse(templateContent);
+      templateData = JSON.parse(templateContent);
+      loadedFrom = `Loaded from filesystem: ${templatePath}`;
+    } else {
+      // For production - load from embedded module
+      console.log(`Template file not found in filesystem, trying require: ./templates/${category}/${name}.json`);
+      templateData = require(`./templates/${category as TemplateCategory}/${name}.json`);
+      loadedFrom = `Loaded using require from: ./templates/${category}/${name}.json`;
     }
     
-    // For production - load from embedded module
-    // Use type assertion for the category parameter
-    return require(`./templates/${category as TemplateCategory}/${name}.json`);
+    // Add debug info to the returned object
+    templateData._debug = {
+      loadedFrom,
+      timestamp: new Date().toISOString()
+    };
+    
+    console.log(`Successfully loaded template with keys: ${Object.keys(templateData).join(', ')}`);
+    return templateData;
   } catch (error) {
+    console.error(`Failed to load template ${category}/${name}:`, error);
     throw new Error(`Failed to load template ${category}/${name}: ${error.message}`);
   }
 }
