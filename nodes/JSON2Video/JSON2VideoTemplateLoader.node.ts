@@ -4,24 +4,103 @@ import {
 	INodeExecutionData,
 	INodeType,
 	INodeTypeDescription,
+	ILoadOptionsFunctions,
+	INodePropertyOptions,
 	NodeConnectionType,
 } from 'n8n-workflow';
 
-import {
-	getTemplateCategories,
-	getTemplatesForCategory,
-	loadTemplate,
-} from './templateLoader';
+import * as path from 'path';
+import * as fs from 'fs';
+
+/**
+ * Registry of all available templates by category
+ */
+type TemplateCategory = keyof typeof templateRegistry;
+
+/**
+ * Registry of all available templates by category
+ */
+const templateRegistry = {
+  basic: {
+    'hello-world': 'Hello World - Simple Text Animation',
+    'image-slideshow': 'Image Slideshow - Transitions Between Images',
+    'video-with-text-overlay': 'Video with Text Overlay - Basic Text Over Video',
+    'video-with-watermark': 'Video with Watermark - Add Logo or Watermark',
+  },
+  marketing: {
+    'black-friday-promo': 'Black Friday Promo - Sale Announcement',
+    'corporate-video': 'Corporate Video - Professional Presentation',
+    'event-agenda': 'Event Agenda - Schedule Presentation',
+    'event-speakers': 'Event Speakers - Speaker Profiles',
+    'motivational': 'Motivational - Inspirational Quote Card',
+    'promo': 'Promo - Variables Template with Call to Action',
+    'quote': 'Quote - Quotation with Background',
+    'real-estate': 'Real Estate - Property Presentation (Landscape)',
+    'real-estate-2': 'Real Estate Story - Property Tour (Portrait)',
+    'slide-text-left': 'Slide Text Left - Animated Text Entrance',
+  },
+  news: {
+    'cnn-lower-third': 'CNN Style Lower Third - News Caption',
+    'one-line-lower-third': 'One Line Lower Third - Simple News Caption',
+  },
+};
+
+/**
+ * Get list of all template categories
+ */
+export function getTemplateCategories(): Array<{name: string, value: string}> {
+  return Object.keys(templateRegistry).map(category => ({
+    name: category.charAt(0).toUpperCase() + category.slice(1),
+    value: category,
+  }));
+}
+
+/**
+ * Get list of templates for a given category
+ */
+export function getTemplatesForCategory(category: string): Array<{name: string, value: string}> {
+  // Use type assertion to tell TypeScript that category is a valid key
+  const templates = templateRegistry[category as TemplateCategory];
+
+  if (!templates) {
+    return [];
+  }
+
+  return Object.entries(templates).map(([value, name]) => ({
+    name: name as string,
+    value,
+  }));
+}
+
+/**
+ * Load a template by category and name
+ */
+export function loadTemplate(category: string, name: string): IDataObject {
+  try {
+    // For local development - try to read from the filesystem first
+    const templatePath = path.join(__dirname, 'templates', category, `${name}.json`);
+
+    if (fs.existsSync(templatePath)) {
+      const templateContent = fs.readFileSync(templatePath, 'utf8');
+      return JSON.parse(templateContent);
+    }
+
+    // For production - load from embedded module
+    return require(`./templates/${category}/${name}.json`);
+  } catch (error) {
+    throw new Error(`Failed to load template ${category}/${name}: ${error.message}`);
+  }
+}
 
 export class JSON2VideoTemplateLoader implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'JSON2Video Template Loader',
 		name: 'json2VideoTemplateLoader',
-		icon: 'file:json2video.svg',
+		icon: 'file:json2video.svg', 
 		group: ['transform'],
 		version: 1,
 		subtitle: '={{$parameter["operation"]}}',
-		description: 'Load templates from the JSON2Video template library',
+		description: 'Load and customize JSON2Video templates',
 		defaults: {
 			name: 'JSON2Video Template Loader',
 		},
@@ -37,20 +116,20 @@ export class JSON2VideoTemplateLoader implements INodeType {
 					{
 						name: 'Load Template',
 						value: 'loadTemplate',
-						description: 'Load a template from the template library',
-						action: 'Load a template from the template library',
 					},
 				],
 				default: 'loadTemplate',
 			},
-			// Template Selection - Dynamically generated from templateLoader
 			{
 				displayName: 'Template Category',
 				name: 'templateCategory',
 				type: 'options',
-				options: getTemplateCategories(),
-				default: 'basic',
-				description: 'Category of templates to choose from',
+				required: true,
+				default: '',
+				description: 'Category of template to load',
+				typeOptions: {
+					loadOptionsMethod: 'getTemplateCategories',
+				},
 				displayOptions: {
 					show: {
 						operation: ['loadTemplate'],
@@ -58,44 +137,19 @@ export class JSON2VideoTemplateLoader implements INodeType {
 				},
 			},
 			{
-				displayName: 'Basic Templates',
-				name: 'basicTemplate',
+				displayName: 'Template Name',
+				name: 'templateName',
 				type: 'options',
-				options: getTemplatesForCategory('basic'),
-				default: 'hello-world',
-				description: 'Basic template to use as starting point',
-				displayOptions: {
-					show: {
-						operation: ['loadTemplate'],
-						templateCategory: ['basic'],
-					},
+				required: true,
+				default: '',
+				description: 'Name of template to load',
+				typeOptions: {
+					loadOptionsMethod: 'getTemplateOptions',
+					loadOptionsDependsOn: ['templateCategory'],
 				},
-			},
-			{
-				displayName: 'Marketing Templates',
-				name: 'marketingTemplate',
-				type: 'options',
-				options: getTemplatesForCategory('marketing'),
-				default: 'corporate-video',
-				description: 'Marketing template to use as starting point',
 				displayOptions: {
 					show: {
 						operation: ['loadTemplate'],
-						templateCategory: ['marketing'],
-					},
-				},
-			},
-			{
-				displayName: 'News Templates',
-				name: 'newsTemplate',
-				type: 'options',
-				options: getTemplatesForCategory('news'),
-				default: 'cnn-lower-third',
-				description: 'News template to use as starting point',
-				displayOptions: {
-					show: {
-						operation: ['loadTemplate'],
-						templateCategory: ['news'],
 					},
 				},
 			},
@@ -104,7 +158,7 @@ export class JSON2VideoTemplateLoader implements INodeType {
 				name: 'editTemplate',
 				type: 'boolean',
 				default: false,
-				description: 'Whether to edit the template before returning it',
+				description: 'Whether to enable template editing',
 				displayOptions: {
 					show: {
 						operation: ['loadTemplate'],
@@ -115,11 +169,11 @@ export class JSON2VideoTemplateLoader implements INodeType {
 				displayName: 'Template JSON',
 				name: 'templateJson',
 				type: 'json',
-				typeOptions: {
-					rows: 12, // Give more space for editing
-				},
 				default: '{}',
-				description: 'Edit the template JSON. IMPORTANT: First run will be empty - click Execute once to see the template, then edit and execute again.',
+				description: 'Edit the template JSON directly',
+				typeOptions: {
+					alwaysOpenEditWindow: true,
+				},
 				displayOptions: {
 					show: {
 						operation: ['loadTemplate'],
@@ -129,6 +183,23 @@ export class JSON2VideoTemplateLoader implements INodeType {
 			},
 		],
 	};
+
+	methods = {
+		loadOptions: {
+			async getTemplateCategories(): Promise<INodePropertyOptions[]> {
+				return getTemplateCategories();
+			},
+			async getTemplateOptions(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
+				const templateCategory = this.getCurrentNodeParameter('templateCategory') as string;
+				if (!templateCategory) {
+					return [];
+				}
+				return getTemplatesForCategory(templateCategory);
+			},
+		},
+	};
+
+
 
 	// This is the function that will be called by n8n when the node is executed
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
@@ -143,54 +214,60 @@ export class JSON2VideoTemplateLoader implements INodeType {
 				if (operation === 'loadTemplate') {
 					// Get template information
 					const templateCategory = this.getNodeParameter('templateCategory', i) as string;
-					let templateName = '';
-				
-					// Get the template based on category
-					if (templateCategory === 'basic') {
-						templateName = this.getNodeParameter('basicTemplate', i) as string;
-					} else if (templateCategory === 'marketing') {
-						templateName = this.getNodeParameter('marketingTemplate', i) as string;
-					} else if (templateCategory === 'news') {
-						templateName = this.getNodeParameter('newsTemplate', i) as string;
-					}
-				
+					const templateName = this.getNodeParameter('templateName', i) as string;
+
 					// Load the template
 					let templateData = loadTemplate(templateCategory, templateName);
-				
+
 					// Check if user wants to edit the template
 					const editTemplate = this.getNodeParameter('editTemplate', i, false) as boolean;
-				
+
 					if (editTemplate) {
 						// Get the JSON from the editor (it may be empty the first time)
 						const templateJson = this.getNodeParameter('templateJson', i, '{}') as string;
-						
-						// If the JSON is not empty and not the default, use it instead
-						if (templateJson && templateJson !== '{}') {
+
+						// Check if this is the first run (JSON is empty or default)
+						if (!templateJson || templateJson === '{}') {
+							// First execution - just return the template with instructions
+							returnData.push({
+								json: {
+									...templateData,
+									_templateInfo: {
+										category: templateCategory,
+										name: templateName,
+										status: 'Template loaded successfully! You can now edit the JSON above and execute again to apply changes.',
+										firstRun: true
+									}
+								},
+								pairedItem: { item: i },
+							});
+						} else {
 							try {
-								// Parse the JSON
-								const userEditedTemplate = typeof templateJson === 'string' 
-									? JSON.parse(templateJson) 
+								// This is a subsequent run with user edits - parse and use the edited JSON
+								const userEditedTemplate = typeof templateJson === 'string'
+									? JSON.parse(templateJson)
 									: templateJson;
-								
+
 								// Use the user-edited template
 								templateData = userEditedTemplate;
+
+								// Add helpful information in the output
+								returnData.push({
+									json: {
+										...templateData,
+										_templateInfo: {
+											category: templateCategory,
+											name: templateName,
+											status: 'Your edited template has been applied successfully!',
+											firstRun: false
+										}
+									},
+									pairedItem: { item: i },
+								});
 							} catch (error) {
 								throw new Error(`Invalid JSON in template customization: ${error.message}`);
 							}
 						}
-						
-						// Add helpful information in the output
-						returnData.push({
-							json: {
-								...templateData,
-								_templateInfo: {
-									category: templateCategory,
-									name: templateName,
-									note: 'On first run, execute once to see the template. Then edit and execute again to apply changes.'
-								}
-							},
-							pairedItem: { item: i },
-						});
 					} else {
 						// Just return the template without edits
 						returnData.push({
@@ -202,7 +279,7 @@ export class JSON2VideoTemplateLoader implements INodeType {
 			} catch (error) {
 				// Handle errors according to n8n conventions
 				if (this.continueOnFail()) {
-					returnData.push({ 
+					returnData.push({
 						json: { error: error.message },
 						pairedItem: { item: i },
 					});

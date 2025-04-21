@@ -7,7 +7,13 @@ import {
 	NodeConnectionType,
 } from 'n8n-workflow';
 
+// Import template loader functions
+import {
+  loadTemplate
+} from './JSON2VideoTemplateLoader.node';
+
 export class JSON2Video implements INodeType {
+	// Static template options are used instead of dynamic loading
 	description: INodeTypeDescription = {
 		displayName: 'JSON2Video',
 		name: 'json2Video',
@@ -71,33 +77,11 @@ export class JSON2Video implements INodeType {
 						value: 'json',
 						description: 'Define movie using raw JSON',
 					},
-					{
-						name: 'Template',
-						value: 'template',
-						description: 'Start with a pre-built template',
-					},
 				],
 				default: 'simple',
 				displayOptions: {
 					show: {
 						operation: ['createMovie'],
-					},
-				},
-			},
-			// Template Selection
-			{
-				displayName: 'Template JSON',
-				name: 'templateJson',
-				type: 'json',
-				typeOptions: {
-					rows: 12,
-				},
-				default: '{}',
-				description: 'The JSON template to use. Connect this to a JSON2Video Template Loader node to select from available templates.',
-				displayOptions: {
-					show: {
-						operation: ['createMovie'],
-						inputMethod: ['template'],
 					},
 				},
 			},
@@ -610,58 +594,58 @@ export class JSON2Video implements INodeType {
 				required: true,
 			},
 			// Properties for the Template operation
+			// Template category and name selection
 			{
-				displayName: 'Template Source',
-				name: 'templateSource',
+				displayName: 'Template Category',
+				name: 'templateCategory',
 				type: 'options',
 				options: [
-					{
-						name: 'Use Template Loader Node',
-						value: 'templateLoader',
-						description: 'Use output from the JSON2Video Template Loader node',
-					},
-					{
-						name: 'Enter JSON Directly',
-						value: 'directJson',
-						description: 'Manually enter template JSON',
-					},
+					{ name: 'Basic', value: 'basic' },
+					{ name: 'Marketing', value: 'marketing' },
+					{ name: 'News', value: 'news' },
 				],
-				default: 'templateLoader',
-				description: 'Source of the template to use',
+				default: 'basic',
+				required: true,
+				description: 'Category of templates to choose from',
 				displayOptions: {
 					show: {
 						operation: ['createMovieFromTemplate'],
 					},
 				},
 			},
-			// Template JSON input for direct entry
 			{
-				displayName: 'Template JSON',
-				name: 'templateJson',
-				type: 'json',
-				typeOptions: {
-					rows: 12,
-				},
-				default: '{}',
-				description: 'The JSON template to use. You can paste a template JSON directly here.',
+				displayName: 'Template',
+				name: 'templateName',
+				type: 'options',
+				options: [
+					// Basic category templates
+					{ name: 'Hello World - Simple Text Animation', value: 'hello-world' },
+					{ name: 'Image Slideshow - Transitions Between Images', value: 'image-slideshow' },
+					{ name: 'Video with Text Overlay - Basic Text Over Video', value: 'video-with-text-overlay' },
+					{ name: 'Video with Watermark - Add Logo or Watermark', value: 'video-with-watermark' },
+					
+					// Marketing category templates
+					{ name: 'Black Friday Promo - Sale Announcement', value: 'black-friday-promo' },
+					{ name: 'Corporate Video - Professional Presentation', value: 'corporate-video' },
+					{ name: 'Event Agenda - Schedule Presentation', value: 'event-agenda' },
+					{ name: 'Event Speakers - Speaker Profiles', value: 'event-speakers' },
+					{ name: 'Motivational - Inspirational Quote Card', value: 'motivational' },
+					{ name: 'Promo - Variables Template with Call to Action', value: 'promo' },
+					{ name: 'Quote - Quotation with Background', value: 'quote' },
+					{ name: 'Real Estate - Property Presentation (Landscape)', value: 'real-estate' },
+					{ name: 'Real Estate Story - Property Tour (Portrait)', value: 'real-estate-2' },
+					{ name: 'Slide Text Left - Animated Text Entrance', value: 'slide-text-left' },
+					
+					// News category templates
+					{ name: 'CNN Style Lower Third - News Caption', value: 'cnn-lower-third' },
+					{ name: 'One Line Lower Third - Simple News Caption', value: 'one-line-lower-third' },
+				],
+				default: 'hello-world',
+				required: true,
+				description: 'Template to use as starting point',
 				displayOptions: {
 					show: {
 						operation: ['createMovieFromTemplate'],
-						templateSource: ['directJson'],
-					},
-				},
-			},
-			// Template from previous node
-			{
-				displayName: 'Template Data Field',
-				name: 'templateDataField',
-				type: 'string',
-				default: 'json',
-				description: 'The field in the input containing the template data from the Template Loader node',
-				displayOptions: {
-					show: {
-						operation: ['createMovieFromTemplate'],
-						templateSource: ['templateLoader'],
 					},
 				},
 			},
@@ -937,49 +921,35 @@ export class JSON2Video implements INodeType {
 
 					returnData.push(response);
 				} else if (operation === 'createMovieFromTemplate') {
-					// Get template input method
-					const templateSource = this.getNodeParameter('templateSource', i) as string;
-					let templateData: IDataObject = {};
+					// Get template category and name
+					const templateCategory = this.getNodeParameter('templateCategory', i) as string;
+					const templateName = this.getNodeParameter('templateName', i) as string;
 					
-					// Get the template data based on source
-					if (templateSource === 'directJson') {
-						// Direct JSON input
-						const templateJson = this.getNodeParameter('templateJson', i, '{}') as string;
-						
-						try {
-							templateData = typeof templateJson === 'string'
-								? JSON.parse(templateJson)
-								: templateJson;
-						} catch (error) {
-							throw new Error(`Invalid JSON in template: ${error.message}`);
-						}
-					} else {
-						// From Template Loader node
-						const templateDataField = this.getNodeParameter('templateDataField', i) as string;
-						const inputData = items[i].json;
-						
-						// Extract template data from the input
-						const fieldPath = templateDataField.split('.');
-						let currentData: any = inputData;
-						
-						for (const field of fieldPath) {
-							if (currentData === undefined || currentData[field] === undefined) {
-								throw new Error(`Could not find template data at ${templateDataField}. Make sure a JSON2Video Template Loader node is connected.`);
-							}
-							currentData = currentData[field];
-						}
-						
-						templateData = currentData;
+					if (!templateCategory || !templateName) {
+						throw new Error('Both template category and template name must be selected');
 					}
 					
+					// Load the template using the category and template name
+					let templateData: IDataObject;
+					try {
+						templateData = loadTemplate(templateCategory, templateName);
+						console.log(`Template ${templateCategory}/${templateName} loaded successfully`);
+					} catch (error) {
+						throw new Error(`Failed to load template "${templateName}" from category "${templateCategory}": ${error.message}`);
+					}
+					
+					if (!templateData || Object.keys(templateData).length === 0) {
+						throw new Error(`Template "${templateName}" from category "${templateCategory}" is empty or invalid.`);
+					}
+
 					// Add movie configuration
 					const movieConfig = this.getNodeParameter('movieConfig', i, {}) as IDataObject;
-					
+
 					// Set basic movie properties from movie config
 					let movieData: IDataObject = { ...templateData };
 					if (movieConfig.resolution) {
 						movieData.resolution = movieConfig.resolution;
-						
+
 						// Add custom dimensions if specified
 						if (movieConfig.resolution === 'custom') {
 							if (movieConfig.width) {
@@ -990,24 +960,24 @@ export class JSON2Video implements INodeType {
 							}
 						}
 					}
-					
+
 					// Set other movie properties
 					if (movieConfig.quality) {
 						movieData.quality = movieConfig.quality;
 					}
-					
+
 					if (movieConfig.draft !== undefined) {
 						movieData.draft = movieConfig.draft;
 					}
-					
+
 					if (movieConfig.cache !== undefined) {
 						movieData.cache = movieConfig.cache;
 					}
-					
+
 					if (movieConfig.comment) {
 						movieData.comment = movieConfig.comment;
 					}
-					
+
 					// Before making the API request, validate and fix durations
 					if (movieData.scenes && Array.isArray(movieData.scenes)) {
 						// Process each scene to ensure no zero durations
@@ -1016,7 +986,7 @@ export class JSON2Video implements INodeType {
 							if (scene.duration === 0) {
 								scene.duration = 1;
 							}
-							
+
 							// Process elements to ensure no zero durations
 							if (scene.elements && Array.isArray(scene.elements)) {
 								for (const element of scene.elements as IDataObject[]) {
@@ -1029,7 +999,7 @@ export class JSON2Video implements INodeType {
 							}
 						}
 					}
-					
+
 					// Make the API request to create the movie
 					const response = await this.helpers.request({
 						method: 'POST',
@@ -1041,7 +1011,7 @@ export class JSON2Video implements INodeType {
 						body: movieData,
 						json: true,
 					});
-					
+
 					returnData.push(response);
 				}
 			} catch (error) {
