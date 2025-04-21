@@ -75,11 +75,11 @@ export class JSON2Video implements INodeType {
 			},
 			// Properties for the Create Movie operation with JSON input
 			{
-				displayName: 'Movie Definition',
+				displayName: 'Scene Definition',
 				name: 'movieDefinition',
 				type: 'json',
-				default: '{\n  "scenes": [\n    {\n      "elements": [\n        {\n          "type": "text",\n          "text": "Hello World!",\n          "style": "001"\n        }\n      ]\n    }\n  ]\n}',
-				description: 'The JSON structure defining the movie content',
+				default: '{\n  "scenes": [\n    {\n      "duration": 2,\n      "elements": [\n        {\n          "type": "text",\n          "text": "Hello World!",\n          "style": "001"\n        }\n      ]\n    }\n  ]\n}',
+				description: 'The JSON structure defining only the scenes and elements (not the movie settings)',
 				displayOptions: {
 					show: {
 						operation: ['createMovie'],
@@ -98,7 +98,6 @@ export class JSON2Video implements INodeType {
 				displayOptions: {
 					show: {
 						operation: ['createMovie'],
-						inputMethod: ['simple'],
 					},
 				},
 				options: [
@@ -602,58 +601,65 @@ export class JSON2Video implements INodeType {
 				if (operation === 'createMovie') {
 					// Get input method
 					const inputMethod = this.getNodeParameter('inputMethod', i) as string;
-					let movieData: IDataObject;
+					let movieData: IDataObject = {};
+
+					// Add movie configuration for both input methods
+					const movieConfig = this.getNodeParameter('movieConfig', i, {}) as IDataObject;
+					
+					// Set basic movie properties
+					if (movieConfig.resolution) {
+						movieData.resolution = movieConfig.resolution;
+						
+						// Add custom dimensions if specified
+						if (movieConfig.resolution === 'custom') {
+							if (movieConfig.width) {
+								movieData.width = movieConfig.width;
+							}
+							if (movieConfig.height) {
+								movieData.height = movieConfig.height;
+							}
+						}
+					}
+					
+					// Set other movie properties
+					if (movieConfig.quality) {
+						movieData.quality = movieConfig.quality;
+					}
+					
+					if (movieConfig.draft !== undefined) {
+						movieData.draft = movieConfig.draft;
+					}
+					
+					if (movieConfig.cache !== undefined) {
+						movieData.cache = movieConfig.cache;
+					}
+					
+					if (movieConfig.comment) {
+						movieData.comment = movieConfig.comment;
+					}
 
 					if (inputMethod === 'json') {
-						// If using JSON input, parse the movie definition directly
+						// If using JSON input, parse the scene definition
 						const movieDefinition = this.getNodeParameter('movieDefinition', i) as string;
 						
 						// Parse the JSON if it's provided as a string
 						try {
-							movieData = typeof movieDefinition === 'string'
+							const scenesData = typeof movieDefinition === 'string'
 								? JSON.parse(movieDefinition)
 								: movieDefinition;
+							
+							// Only extract the scenes property from the JSON
+							if (scenesData.scenes) {
+								movieData.scenes = scenesData.scenes;
+							} else {
+								// If the JSON doesn't have a scenes property, assume it's an array of scenes
+								movieData.scenes = Array.isArray(scenesData) ? scenesData : [scenesData];
+							}
 						} catch (error) {
 							throw new Error(`Invalid JSON in movie definition: ${error.message}`);
 						}
 					} else {
-						// Simple input method - build the movie definition from structured inputs
-						movieData = {} as IDataObject;
-						
-						// Add movie configuration
-						const movieConfig = this.getNodeParameter('movieConfig', i, {}) as IDataObject;
-						
-						// Set basic movie properties
-						if (movieConfig.resolution) {
-							movieData.resolution = movieConfig.resolution;
-							
-							// Add custom dimensions if specified
-							if (movieConfig.resolution === 'custom') {
-								if (movieConfig.width) {
-									movieData.width = movieConfig.width;
-								}
-								if (movieConfig.height) {
-									movieData.height = movieConfig.height;
-								}
-							}
-						}
-						
-						// Set other movie properties
-						if (movieConfig.quality) {
-							movieData.quality = movieConfig.quality;
-						}
-						
-						if (movieConfig.draft !== undefined) {
-							movieData.draft = movieConfig.draft;
-						}
-						
-						if (movieConfig.cache !== undefined) {
-							movieData.cache = movieConfig.cache;
-						}
-						
-						if (movieConfig.comment) {
-							movieData.comment = movieConfig.comment;
-						}
+						// Simple input method - build the scenes from structured inputs
 						
 						// Process scenes
 						const sceneSettings = this.getNodeParameter(
